@@ -1,0 +1,78 @@
+﻿  bullet.cpp
+  camera.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(97,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(98,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(220,40): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(221,40): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(227,40): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\camera.cpp(228,40): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  collider.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\collider.cpp(33,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\collider.cpp(63,48): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  cube.cpp
+  enemy.cpp
+  icos.cpp
+  icosahedron.cpp
+  inputManager.cpp
+  main.cpp
+  mesh.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(42,37): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(48,39): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(49,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(111,41): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(46,10): warning C4101: 'i2': unreferenced local variable
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(46,6): warning C4101: 'i1': unreferenced local variable
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(61,16): warning C4101: 'v2': unreferenced local variable
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(61,12): warning C4101: 'v1': unreferenced local variable
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\mesh.cpp(405,52): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  object.cpp
+  render.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\render.cpp(112,83): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\render.cpp(117,85): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  scene.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\scene.cpp(109,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\scene.cpp(110,12): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  shader.cpp
+  spaceShip.cpp
+  spatialHashing.cpp
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\spatialHashing.cpp(41,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\spatialHashing.cpp(42,13): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+  system.cpp
+  texture.cpp
+  Generating Code...
+glew32s.lib(glew.obj) : warning LNK4099: PDB '' was not found with 'glew32s.lib(glew.obj)' or at ''; linking object as if no debug info
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  ProgGraf.vcxproj -> C:\Users\28dav\source\repos\drewdj\OpenGL--TFG.PlanetGeneration\x64\Debug\PlanetGeneration.exe

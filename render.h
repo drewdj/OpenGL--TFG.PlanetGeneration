@@ -27,6 +27,6 @@ public:
 	void drawScene(Scene* scene);
 	void setupObject(Object* obj);
 	void drawObjectGL4(Object* obj);
-	void setCamera(Camera* cam, GLFWwindow* window);
+	void setCamera(Camera* cam);
 };
 

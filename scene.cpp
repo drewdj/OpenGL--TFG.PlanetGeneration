@@ -11,7 +11,7 @@ Scene::Scene(){
 void Scene::setCamera(Camera* cam, GLFWwindow* window){
 
 	this->cam=cam;
-	cam->window = window;
+	cam->setWindow(window);
 }
 
 Camera* Scene::getCamera(){

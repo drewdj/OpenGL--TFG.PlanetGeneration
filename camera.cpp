@@ -132,6 +132,8 @@ void Camera::step()
     rotate(xoffset, worldY);
     rotate(yoffset, worldX);
     rotate(zoffset, worldZ);
+
+
 }
 
 glm::vec3 Camera::getPosition()

@@ -10,7 +10,6 @@ layout(location=4) uniform int textType;
 layout(location=0)in vec4 vpos;
 layout(location=1)in vec4 vcolor;
 layout(location=2)in vec4 vnorm;
-layout(location=5)in vec4 camPos;
 
 out vec4 fcolor;
 out vec4 fpos;
@@ -24,9 +23,5 @@ void main() {
 	fpos=M*vpos;
 	fnorm=normalize(inverse(transpose(M))*vnorm);	
 	fcolor = vcolor;
-	fTextType = textType; 
-	fcubeTexCoord = vpos;
-
-
-
+	fTextType = textType;
 }

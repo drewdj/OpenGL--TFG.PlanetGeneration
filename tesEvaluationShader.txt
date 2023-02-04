@@ -12,13 +12,13 @@ patch in vec4 tescontrol_color;
 in vec4 tescontrol_pos[];
 in vec4 tescontrol_norm[];
 patch in int tescontrol_TextType;
-in vec4 tescontrol_cubeTexCoord[];
+
 
 out vec4 fcolor;
 out vec4 fpos;
 out vec4 fnorm;
 out flat int fTextType;
-out vec4 fcubeTexCoord;
+
 
 
 
@@ -30,7 +30,7 @@ void main() {
     float w = gl_TessCoord.z;
 
     // barycentric interpolation
-    vec4 texCoord = u * tescontrol_cubeTexCoord[0] + v * tescontrol_cubeTexCoord[1] + w * tescontrol_cubeTexCoord[2];
+
 
     vec4 pos0 = gl_in[0].gl_Position;
     vec4 pos1 = gl_in[1].gl_Position;
@@ -66,7 +66,7 @@ void main() {
 	fpos = spherePos;
 	fnorm = tescontrol_norm[gl_PrimitiveID];
 	fTextType = tescontrol_TextType;
-	fcubeTexCoord = spherePos;
+
 
 
 	}

@@ -1,7 +1,8 @@
 #version 460 core
 
 layout(location=0) uniform mat4 MVP;
-layout (location=5) uniform vec4 camPos;
+layout(location=1) uniform mat4 M;
+layout (location=5) uniform vec3 camPos;
 
 
 layout (vertices = 3) out;
@@ -10,34 +11,18 @@ in vec4 fcolor[];
 in vec4 fpos[];
 in vec4 fnorm[];
 flat in int fTextType[];
-in vec4 fcubeTexCoord[];
+
 
 patch out vec4 tescontrol_color;
 out vec4 tescontrol_pos[];
 out vec4 tescontrol_norm[];
 patch out int tescontrol_TextType;
-out vec4 tescontrol_cubeTexCoord[];
+
 
 const int MIN_TES = 1;
 const int MAX_TES = 2;
 const float MIN_DIST = 0.0;
 const float MAX_DIST = 4;
-
-int dist(float distance){
-
-    if (distance >= 0 && distance < 4){
-        return 64;
-    }else if (distance >= 4 && distance < 6){
-		return 10;
-    }else if (distance >= 6 && distance < 8){
-        return 5;
-        } else if (distance >= 8 && distance < 10){
-        return 2;
-		} else {
-        return 1;
-        }
-    
-}
 
 
 
@@ -51,33 +36,28 @@ void main(){
 	tescontrol_pos[gl_InvocationID] = fpos[gl_InvocationID];
 	tescontrol_norm[gl_InvocationID] = fnorm[gl_InvocationID];
 	tescontrol_TextType = fTextType[gl_InvocationID];
-	tescontrol_cubeTexCoord[gl_InvocationID] = fcubeTexCoord[gl_InvocationID];
+
 	
 if (gl_InvocationID == 0)
     {
-
-        vec4 localPos0 = inverse(MVP) * gl_in[0].gl_Position;
-        vec4 localPos1 = inverse(MVP) * gl_in[1].gl_Position;
-        vec4 localPos2 = inverse(MVP) * gl_in[2].gl_Position;
-        
-        vec4 centro = (localPos0 + localPos1 + localPos2) / 3.0;
-
-        vec4 centrofpos = (fpos[0] + fpos[1] + fpos[2]) / 3.0;
-        
-        
-        
-       
-
-
-
+		
+		float test = distance(camPos, fpos[gl_InvocationID].xyz);
 			
-        gl_TessLevelOuter[0] = dist(distance(centrofpos, camPos)); 
-        gl_TessLevelOuter[1] = dist(distance(centrofpos, camPos)); 
-        gl_TessLevelOuter[2] = dist(distance(centrofpos, camPos)); 
+        if(test > 0 && test < 4){
+
+		gl_TessLevelOuter[0] = 4; 
+        gl_TessLevelOuter[1] = 4; 
+        gl_TessLevelOuter[2] = 4; 
         
-        gl_TessLevelInner[0] = dist(distance(centrofpos, camPos));
-
-
+        gl_TessLevelInner[0] = 4;
+		}	
+		else{
+		gl_TessLevelOuter[0] = 2; 
+        gl_TessLevelOuter[1] = 2; 
+        gl_TessLevelOuter[2] = 2; 
+        
+        gl_TessLevelInner[0] = 2;
+		}
 
     }
 

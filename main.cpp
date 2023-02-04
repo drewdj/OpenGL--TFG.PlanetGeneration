@@ -52,6 +52,8 @@ int main(int argc, char** argv)
 
 
 	GLFWwindow* window = glfwCreateWindow(1920, 1080, "Prueba 1 GLFW", nullptr, nullptr);
+	//arregla problema de posicion inicial con la camara
+	glfwSetCursorPos(window, 0, 0);
 	glfwMakeContextCurrent(window);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
@@ -69,8 +71,8 @@ int main(int argc, char** argv)
 	Render* render = new Render();
 	Scene* scene = new Scene();
 	System::scene = scene;
-	scene->setCamera(new Camera(glm::vec3(0, 0, 0.25), glm::vec3(0, 0, 0), perspective),window);
-	render->setCamera(scene->getCamera(), window);
+	scene->setCamera(new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0.25), perspective),window);
+	render->setCamera(scene->getCamera());
 
 
 

@@ -147,10 +147,9 @@ void Render::drawScene(Scene* scene)
 
 }
 
-void Render::setCamera(Camera* cam, GLFWwindow* window) {
+void Render::setCamera(Camera* cam) {
 
 	this->cam = cam;
-	cam->window = window;
 }
 
 

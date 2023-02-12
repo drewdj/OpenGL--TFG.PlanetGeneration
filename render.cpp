@@ -65,6 +65,11 @@ void Render::drawObject(Object* obj){
 
 void Render::drawObjectGL4(Object* obj){
 
+	if (obj->mesh->tex->textType == 2) {
+		glDepthFunc(GL_LEQUAL);
+
+	}
+
 	obj->computeMatrix();
 	
 	bufferObject_t bo=boList[obj->id];
@@ -93,8 +98,16 @@ void Render::drawObjectGL4(Object* obj){
 	int textureUnit = 0;
 	obj->mesh->tex->bind(textureUnit);
 
+	glm::mat4 testView = view;
 	
-	glUniformMatrix4fv(0,1,GL_FALSE,&(proj*view*obj->getMatrix())[0][0]);	
+	if (obj->mesh->tex->textType == 2) {
+		
+		//downgrade to mat3 and scale it back last row = 0 so no effects on traslation
+		testView = glm::mat4(glm::mat3(view));
+	}
+	
+	
+	glUniformMatrix4fv(0,1,GL_FALSE,&(proj* testView *obj->getMatrix())[0][0]);
 	glUniformMatrix4fv(1,1,GL_FALSE,&(obj->getMatrix())[0][0]);	
 	glUniform4fv(2,1,&lightPos[0]);
 	glUniform1i(3, textureUnit);
@@ -115,6 +128,8 @@ void Render::drawObjectGL4(Object* obj){
 
 	if (obj->mesh->tex->textType == 2) {
 		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
+
+		glDepthFunc(GL_LESS);
 	}
 }
 

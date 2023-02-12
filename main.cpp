@@ -76,7 +76,7 @@ int main(int argc, char** argv)
 
 
 
-	Object* icosahedron = new Icosahedron(10);
+	Object* icosahedron = new Icosahedron(100);
 	icosahedron->position.z -= 2;
 	render->setupObject(icosahedron);
 	scene->addObject(icosahedron);
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
 	Object* cube = new Cube("cube.trg");
 	render->setupObject(cube);
 	scene->addObject(cube);
-	cube->scale *= 50;
+
 
 	while (!glfwWindowShouldClose(window))
 	{

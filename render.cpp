@@ -65,6 +65,11 @@ void Render::drawObject(Object* obj){
 
 void Render::drawObjectGL4(Object* obj){
 
+	if (obj->mesh->tex->textType == 2) {
+		glDepthFunc(GL_LEQUAL);
+
+	}
+
 	obj->computeMatrix();
 	
 	bufferObject_t bo=boList[obj->id];
@@ -88,26 +93,32 @@ void Render::drawObjectGL4(Object* obj){
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
 	glm::vec4 lightPos(0.0f,0.0f,3.0f,1.0f);
-	glm::vec3 camPos(cam->getPosition());
+	glm::vec3 camPos(cam->getForwardVector());
 
 	int textureUnit = 0;
 	obj->mesh->tex->bind(textureUnit);
 
+	glm::mat4 testView = view;
 	
-	glUniformMatrix4fv(0,1,GL_FALSE,&(proj*view*obj->getMatrix())[0][0]);	
+	if (obj->mesh->tex->textType == 2) {		
+		//downgrade to mat3 and scale it back last row = 0 so no effects on traslation
+		testView = glm::mat4(glm::mat3(view));
+	}
+	
+	
+	glUniformMatrix4fv(0,1,GL_FALSE,&(proj* testView *obj->getMatrix())[0][0]);
 	glUniformMatrix4fv(1,1,GL_FALSE,&(obj->getMatrix())[0][0]);	
 	glUniform4fv(2,1,&lightPos[0]);
 	glUniform1i(3, textureUnit);
 	glUniform1i(4, obj->mesh->tex->textType);
 	glUniform3fv(5, 1, &camPos[0]);
-	
-	std::cout << camPos.x << " " << camPos.y << " " << camPos.z << std::endl;
 	glUniform1f(6, obj->mesh->radius);	
+	glUniformMatrix4fv(7, 1, GL_FALSE, &(testView)[0][0]);
 
 
 	//Pintar lineas
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDisable(GL_CULL_FACE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDisable(GL_CULL_FACE);
 
 
 	if (obj->mesh->tex->textType == 0) {
@@ -117,6 +128,8 @@ void Render::drawObjectGL4(Object* obj){
 
 	if (obj->mesh->tex->textType == 2) {
 		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
+
+		glDepthFunc(GL_LESS);
 	}
 }
 

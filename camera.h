@@ -66,6 +66,7 @@ public:
 	Camera(glm::vec3 pos, glm::vec3 lookAt, cameraType_e type);
 	void step();
 	void computeMatrix();
+	glm::vec3 getForwardVector();
 	glm::vec3 getPosition();
 	glm::mat4 getMatrix();
 	glm::mat4 getProjectionMatrix();

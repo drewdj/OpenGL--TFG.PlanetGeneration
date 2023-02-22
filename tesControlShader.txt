@@ -2,6 +2,7 @@
 
 layout(location=0) uniform mat4 MVP;
 layout(location=1) uniform mat4 M;
+layout(location=7) uniform mat4 V;
 layout (location=5) uniform vec3 camPos;
 
 
@@ -9,6 +10,7 @@ layout (vertices = 3) out;
 
 in vec4 fcolor[];
 in vec4 fpos[];
+in vec4 fcubeTexCoord[];
 in vec4 fnorm[];
 flat in int fTextType[];
 
@@ -17,12 +19,6 @@ patch out vec4 tescontrol_color;
 out vec4 tescontrol_pos[];
 out vec4 tescontrol_norm[];
 patch out int tescontrol_TextType;
-
-
-const int MIN_TES = 1;
-const int MAX_TES = 2;
-const float MIN_DIST = 0.0;
-const float MAX_DIST = 4;
 
 
 
@@ -41,22 +37,27 @@ void main(){
 if (gl_InvocationID == 0)
     {
 		
-		float test = distance(camPos, fpos[gl_InvocationID].xyz);
+		float angle = acos(dot(camPos, fpos[0].xyz) / (length(camPos) * length(fpos[0].xyz)));
+		
+		vec4 center = (fpos[0] + fpos[1] + fpos[2]) / 3.0;
+		
+		center = V * center;
+		
+		float dist = -center.z;
 			
-        if(test > 0 && test < 4){
+        if(dist >= -4 && dist < 2){
 
-		gl_TessLevelOuter[0] = 4; 
-        gl_TessLevelOuter[1] = 4; 
-        gl_TessLevelOuter[2] = 4; 
+		gl_TessLevelOuter[0] = 64; 
+        gl_TessLevelOuter[1] = 64; 
+        gl_TessLevelOuter[2] = 64; 
         
-        gl_TessLevelInner[0] = 4;
-		}	
-		else{
-		gl_TessLevelOuter[0] = 2; 
-        gl_TessLevelOuter[1] = 2; 
-        gl_TessLevelOuter[2] = 2; 
+        gl_TessLevelInner[0] = 64;
+		}else{
+		gl_TessLevelOuter[0] = 1; 
+        gl_TessLevelOuter[1] = 1; 
+        gl_TessLevelOuter[2] = 1; 
         
-        gl_TessLevelInner[0] = 2;
+        gl_TessLevelInner[0] = 1;
 		}
 
     }

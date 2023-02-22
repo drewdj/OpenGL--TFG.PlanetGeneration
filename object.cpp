@@ -66,11 +66,4 @@ void Object::updateCollider(){
 
 void Object::step(){
 
-	/*this->rotation.y+=0.01f;
-	this->position.x+=0.01f;
-	
-	if(this->position.x>1.0f)
-		this->position.x=-1.0f;		
-		*/
-
 }

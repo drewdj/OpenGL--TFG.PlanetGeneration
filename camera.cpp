@@ -136,6 +136,11 @@ void Camera::step()
 
 }
 
+glm::vec3 Camera::getForwardVector()
+{
+	return glm::vec3(0, 0, -1) * orientation;
+}
+
 glm::vec3 Camera::getPosition()
 {
     return position;

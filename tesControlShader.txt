@@ -37,7 +37,7 @@ void main(){
 if (gl_InvocationID == 0)
     {
 		
-		float angle = acos(dot(camPos, fpos[0].xyz) / (length(camPos) * length(fpos[0].xyz)));
+		//float angle = acos(dot(camPos, fpos[0].xyz) / (length(camPos) * length(fpos[0].xyz)));
 		
 		vec4 center = (fpos[0] + fpos[1] + fpos[2]) / 3.0;
 		
@@ -45,21 +45,32 @@ if (gl_InvocationID == 0)
 		
 		float dist = -center.z;
 			
-        if(dist >= -4 && dist < 2){
+        if(dist >= -4 && dist < 4){
 
 		gl_TessLevelOuter[0] = 64; 
         gl_TessLevelOuter[1] = 64; 
         gl_TessLevelOuter[2] = 64; 
         
         gl_TessLevelInner[0] = 64;
-		}else{
-		gl_TessLevelOuter[0] = 1; 
-        gl_TessLevelOuter[1] = 1; 
-        gl_TessLevelOuter[2] = 1; 
+		}else if(dist >=4 && dist < 8){
+		gl_TessLevelOuter[0] = 32; 
+        gl_TessLevelOuter[1] = 32; 
+        gl_TessLevelOuter[2] = 32; 
         
-        gl_TessLevelInner[0] = 1;
+        gl_TessLevelInner[0] = 32;
+		}else if(dist >=8 && dist < 12){
+		gl_TessLevelOuter[0] = 16; 
+		gl_TessLevelOuter[1] = 16; 
+		gl_TessLevelOuter[2] = 16; 
+		
+		gl_TessLevelInner[0] = 16;
+		}else if(dist >=12){
+		gl_TessLevelOuter[0] = 8;
+		gl_TessLevelOuter[1] = 8;
+		gl_TessLevelOuter[2] = 8;
+		
+		gl_TessLevelInner[0] = 8;
 		}
-
     }
 
 

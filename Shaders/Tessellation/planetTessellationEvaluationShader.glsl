@@ -327,7 +327,7 @@ void main() {
     // barycentric interpolation    
     vec4 pos = u * pos0 + v * pos1 + w * pos2;
 
-    vec4 localPos = pos;
+    vec4 localPos = inverse(MVP) * pos;
 
     vec3 dir = normalize(localPos.xyz);  
     
@@ -350,12 +350,11 @@ void main() {
         n += 0.05*psrdnoise(8.0*v2+0.3, p*8.0, 8.0*alpha, g);
         n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);        
         vec3 mixcolor = vec3(n);
-        float test2 = mixcolor.z;
+        float test2 = mixcolor.x;
         
            
         //guardar mixcolor en Texture
         
-        vec4 test = vec4(mixcolor, 1.0);
 
     float maxHeight = 1.08;
     float minHeight = 0.95;
@@ -376,6 +375,10 @@ void main() {
     fcolor = vec4(mixcolor, 1.0);
 
 	}
+
+    
+
+
 
 
     

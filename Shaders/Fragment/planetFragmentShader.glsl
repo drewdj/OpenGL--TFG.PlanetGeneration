@@ -41,5 +41,5 @@ void main()
         //float diffuse = max(dot(normal, lightDir), 0.0);         
         //gli_FragColor = fragColor * lightColor * diffuse;
         
-        gli_FragColor = fcolor;
+        gli_FragColor = fragColor;
 }

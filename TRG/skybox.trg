@@ -36,7 +36,7 @@
 16 18 19
 20 21 22
 20 22 23
-Shaders/Vertex/skyboxVertexShader.txt
-Shaders/Fragment/skyboxFragmentShader.txt
+Shaders/Vertex/skyboxVertexShader.glsl
+Shaders/Fragment/skyboxFragmentShader.glsl
 2
 skybox1

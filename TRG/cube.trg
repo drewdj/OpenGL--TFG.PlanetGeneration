@@ -36,6 +36,6 @@
 16 18 19
 20 21 22
 20 22 23
-Shaders/Vertex/lightVertexShader.txt
-Shaders/Fragment/lightFragmentShader.txt
+Shaders/Vertex/lightVertexShader.glsl
+Shaders/Fragment/lightFragmentShader.glsl
 1

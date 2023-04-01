@@ -194,14 +194,14 @@
     <None Include="vshader.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shaders\Fragment\lightFragmentShader.txt" />
-    <Text Include="Shaders\Fragment\planetFragmentShader.txt" />
-    <Text Include="Shaders\Fragment\skyboxFragmentShader.txt" />
-    <Text Include="Shaders\Tessellation\planetTessellationControlShader.txt" />
-    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.txt" />
-    <Text Include="Shaders\Vertex\lightVertexShader.txt" />
-    <Text Include="shaders\Vertex\planetVertexShader.txt" />
-    <Text Include="shaders\Vertex\skyboxVertexShader.txt" />
+    <Text Include="Shaders\Fragment\lightFragmentShader.glsl" />
+    <Text Include="Shaders\Fragment\planetFragmentShader.glsl" />
+    <Text Include="Shaders\Fragment\skyboxFragmentShader.glsl" />
+    <Text Include="Shaders\Tessellation\planetTessellationControlShader.glsl" />
+    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.glsl" />
+    <Text Include="Shaders\Vertex\lightVertexShader.glsl" />
+    <Text Include="shaders\Vertex\planetVertexShader.glsl" />
+    <Text Include="shaders\Vertex\skyboxVertexShader.glsl" />
     <Text Include="tesControlShader.txt" />
     <Text Include="tesEvaluationShader.txt" />
   </ItemGroup>

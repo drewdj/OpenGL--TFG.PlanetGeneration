@@ -60,28 +60,28 @@
   <ItemGroup>
     <Text Include="tesControlShader.txt" />
     <Text Include="tesEvaluationShader.txt" />
-    <Text Include="shaders\Vertex\planetVertexShader.txt">
+    <Text Include="shaders\Vertex\planetVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </Text>
-    <Text Include="shaders\Vertex\skyboxVertexShader.txt">
+    <Text Include="shaders\Vertex\skyboxVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </Text>
-    <Text Include="Shaders\Fragment\planetFragmentShader.txt">
+    <Text Include="Shaders\Fragment\planetFragmentShader.glsl">
       <Filter>Shaders\Fragment</Filter>
     </Text>
-    <Text Include="Shaders\Fragment\skyboxFragmentShader.txt">
+    <Text Include="Shaders\Fragment\skyboxFragmentShader.glsl">
       <Filter>Shaders\Fragment</Filter>
     </Text>
-    <Text Include="Shaders\Tessellation\planetTessellationControlShader.txt">
+    <Text Include="Shaders\Tessellation\planetTessellationControlShader.glsl">
       <Filter>Shaders\Tessellation</Filter>
     </Text>
-    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.txt">
+    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.glsl">
       <Filter>Shaders\Tessellation</Filter>
     </Text>
-    <Text Include="Shaders\Vertex\lightVertexShader.txt">
+    <Text Include="Shaders\Vertex\lightVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </Text>
-    <Text Include="Shaders\Fragment\lightFragmentShader.txt">
+    <Text Include="Shaders\Fragment\lightFragmentShader.glsl">
       <Filter>Shaders\Fragment</Filter>
     </Text>
   </ItemGroup>

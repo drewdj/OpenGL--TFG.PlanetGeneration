@@ -89,10 +89,10 @@ Mesh::Mesh(int vertex) {
 		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
 	}
 
-	std::string vshader = "Shaders/Vertex/planetVertexShader.txt";
-	std::string fshader = "Shaders/Fragment/planetFragmentShader.txt";
-	std::string tesControlShader = "Shaders/Tessellation/planetTessellationControlShader.txt";
-	std::string tesEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.txt";
+	std::string vshader = "Shaders/Vertex/planetVertexShader.glsl";
+	std::string fshader = "Shaders/Fragment/planetFragmentShader.glsl";
+	std::string tesControlShader = "Shaders/Tessellation/planetTessellationControlShader.glsl";
+	std::string tesEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
 
 	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
 

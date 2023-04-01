@@ -308,6 +308,8 @@ float psrdnoise(vec3 x, vec3 period, float alpha, out vec3 gradient)
   return 39.5 * n;
 }
 
+
+
 void main() {    
 
    // barycentric coordinates

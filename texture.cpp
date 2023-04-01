@@ -29,12 +29,14 @@ Texture::Texture(std::string filename) {
 
 
 	Texture::Texture(int textType, std::string folder) {
+		
 		this->textType = textType;
 
-		
+		if (folder != "")
+		{
 			// All the faces of the cubemap (make sure they are in this exact order)
 
-			std::string carpeta = "data/" + folder +"/";
+			std::string carpeta = "data/" + folder + "/";
 
 			std::string facesCubemap[6] =
 			{
@@ -89,12 +91,37 @@ Texture::Texture(std::string filename) {
 			}
 
 			this->glId = cubemapTexture;
+		}
 		
 	}
 
+	Texture::Texture() {
+		this->textType = 7;
+		unsigned int noiseTexture = -1;
+		glGenTextures(1, &noiseTexture);
+		glBindTexture(GL_TEXTURE_3D, noiseTexture);
+		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		this->glId = noiseTexture;
+
+	}
+	
 void Texture::bind(int textureunitIdx) {
-    glActiveTexture(GL_TEXTURE0+textureunitIdx);
-    glBindTexture(GL_TEXTURE_CUBE_MAP,glId);
+	if (this->textType == 7)
+	{
+		glActiveTexture(GL_TEXTURE0 + textureunitIdx);
+		glBindTexture(GL_TEXTURE_3D, glId);
+	}
+	else {
+		glActiveTexture(GL_TEXTURE0 + textureunitIdx);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, glId);
+	}
+
 }
 
 //void Texture::setPixel(int x, int y, char r, char g, char b, char a){

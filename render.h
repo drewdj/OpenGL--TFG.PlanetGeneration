@@ -8,7 +8,7 @@
 typedef struct bufferObject_t{
 	unsigned int abo; //array buffer object ID
 	unsigned int vbo; //vertex bufferObject
-	unsigned int ibo; //idx bufferObje
+	unsigned int ibo; //idx bufferObject
 
 }bufferObject_t;
 

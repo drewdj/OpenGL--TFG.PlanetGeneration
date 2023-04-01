@@ -1,4 +1,5 @@
 #include "render.h"
+#include <time.h>
 #include <cstdlib>
 
 
@@ -67,10 +68,11 @@ void Render::drawObjectGL4(Object* obj){
 
 	if (obj->mesh->tex->textType == 2) {
 		glDepthFunc(GL_LEQUAL);
-
 	}
 
 	obj->computeMatrix();
+
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	
 	bufferObject_t bo=boList[obj->id];
 	
@@ -114,6 +116,10 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform3fv(5, 1, &camPos[0]);
 	glUniform1f(6, obj->mesh->radius);	
 	glUniformMatrix4fv(7, 1, GL_FALSE, &(testView)[0][0]);
+	//get time as float
+	float time = (float)clock() / CLOCKS_PER_SEC;
+	glUniform1f(8, time );
+	glUniform4fv(9, 1, &lightColor[0]);
 
 
 	//Pintar lineas
@@ -121,16 +127,19 @@ void Render::drawObjectGL4(Object* obj){
 	//glDisable(GL_CULL_FACE);
 
 
-	if (obj->mesh->tex->textType == 0) {
+	if (obj->mesh->tex->textType == 0 || obj->mesh->tex->textType == 7) {
 		glDrawElements(GL_PATCHES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
-
+	}
+	else
+	{
+		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
 	}
 
 	if (obj->mesh->tex->textType == 2) {
-		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
-
 		glDepthFunc(GL_LESS);
 	}
+	
+	
 }
 
 

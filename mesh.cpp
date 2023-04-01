@@ -36,6 +36,69 @@ Mesh::Mesh(std::string fileName) {
 	loadFromFile(fileName);
 }
 
+Mesh::Mesh(int vertex) {
+
+	vertexList = new std::vector<vertex_t>();
+	faceList = new std::vector<int>();
+
+	computeIcosahedronVertices();
+
+
+	int tindices[20][3];
+	for (int i = 1; i <= 5; i++)
+	{
+		tindices[i - 1][2] = 0;
+		tindices[i - 1][1] = i;
+		tindices[i - 1][0] = 1 + (i % 5);
+
+		tindices[i + 4][2] = 1 + (i % 5);
+		tindices[i + 4][1] = i;
+		tindices[i + 4][0] = i + 5;
+
+		tindices[i + 9][2] = i + 5;
+		tindices[i + 9][1] = 6 + (i % 5);
+		tindices[i + 9][0] = 1 + (i % 5);
+
+		tindices[i + 14][2] = i + 5;
+		tindices[i + 14][1] = 11;
+		tindices[i + 14][0] = 6 + (i % 5);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		int v1, v2, v3;
+
+		v1 = tindices[i][0];
+		v2 = tindices[i][1];
+		v3 = tindices[i][2];
+
+		std::array<float, 3> vertex0, vertex1, vertex2;
+
+		vertex0[0] = v[v1][0];
+		vertex0[1] = v[v1][1];
+		vertex0[2] = v[v1][2];
+
+		vertex1[0] = v[v2][0];
+		vertex1[1] = v[v2][1];
+		vertex1[2] = v[v2][2];
+
+		vertex2[0] = v[v3][0];
+		vertex2[1] = v[v3][1];
+		vertex2[2] = v[v3][2];
+
+		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
+	}
+
+	std::string vshader = "Shaders/Vertex/planetVertexShader.txt";
+	std::string fshader = "Shaders/Fragment/planetFragmentShader.txt";
+	std::string tesControlShader = "Shaders/Tessellation/planetTessellationControlShader.txt";
+	std::string tesEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.txt";
+
+	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
+
+	tex = new Texture();
+}
+
 void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro de forma matematica desplazando por angulos
 {
 	radius = 5;
@@ -85,6 +148,10 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 	v[11][2] = -radius;
 	v[11][3] = 0;
 
+	//calcular la normal de cada vertice
+
+	
+
 	//meter los vertices en vertexList
 	for (int i = 0; i < 12; i++)
 	{
@@ -116,72 +183,6 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 	}
 
 
-}
-
-Mesh::Mesh(int vertex) {
-
-	vertexList = new std::vector<vertex_t>();
-	faceList = new std::vector<int>();
-
-	computeIcosahedronVertices();
-
-
-	int tindices[20][3];
-	for (int i = 1; i <= 5; i++)
-	{
-		tindices[i - 1][2] = 0;
-		tindices[i - 1][1] = i;
-		tindices[i - 1][0] = 1 + (i % 5);
-
-		tindices[i + 4][2] = 1 + (i % 5);
-		tindices[i + 4][1] = i;		
-		tindices[i + 4][0] = i + 5;
-
-		tindices[i + 9][2] = i + 5;
-		tindices[i + 9][1] = 6 + (i % 5);
-		tindices[i + 9][0] = 1 + (i % 5);
-
-		tindices[i + 14][2] = i + 5;
-		tindices[i + 14][1] = 11;	
-		tindices[i + 14][0] = 6 + (i % 5);
-	}
-
-	for (int i = 0; i < 20; i++)
-	{
-		int v1, v2, v3;
-
-		v1 = tindices[i][0];
-		v2 = tindices[i][1];
-		v3 = tindices[i][2];
-
-		std::array<float, 3> vertex0,vertex1,vertex2;
-		
-		vertex0[0] = v[v1][0];
-		vertex0[1] = v[v1][1];
-		vertex0[2] = v[v1][2];
-
-		vertex1[0] = v[v2][0];
-		vertex1[1] = v[v2][1];
-		vertex1[2] = v[v2][2];
-
-		vertex2[0] = v[v3][0];
-		vertex2[1] = v[v3][1];
-		vertex2[2] = v[v3][2];
-
-		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
-	}
-
-	std::string vshader = "vshader.txt";
-	std::string fshader = "fshader.txt";
-	std::string tesControlShader = "tesControlShader.txt";
-	std::string tesEvaluationShader = "tesEvaluationShader.txt";
-
-	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
-	
-	tex = new Texture(0, "terrain2");
-
-	std::cout << "Caras: " << faceList->size() / 3 << std::endl;
-	std::cout << "Vertices: " << vertexList->size() << std::endl;
 }
 
 void Mesh::normalize(std::array<float, 3> &v) {
@@ -249,7 +250,6 @@ void Mesh::subdividirPorCorte(std::array<float, 3> vertex0, std::array<float, 3>
 
 			vertex_t vertice2 = createVertex(rowList[i][j + 1]);
 
-
 			faceList->push_back(vertice0.positionInList);
 			faceList->push_back(vertice1.positionInList);
 			faceList->push_back(vertice2.positionInList);
@@ -268,6 +268,7 @@ void Mesh::subdividirPorCorte(std::array<float, 3> vertex0, std::array<float, 3>
 			vertex_t inverseVertice1 = createVertex(rowList[i + 1][j + 1]);
 
 			vertex_t inverseVertice2 = createVertex(rowList[i][j + 1]);
+
 
 			faceList->push_back(inverseVertice0.positionInList);
 			faceList->push_back(inverseVertice1.positionInList);
@@ -377,12 +378,16 @@ void Mesh::loadFromFile(std::string fileName) {
 	fin >> vshader;
 	std::string fshader;
 	fin >> fshader;
+	int texType;
+	fin >> texType;
 	std::string texFolder;
 	fin >> texFolder;
 	fin.close();
+	
+	std::cout << texType << std::endl;
 
 	shader = new GLShader(vshader, fshader);
-	tex = new Texture(2,texFolder);
+	tex = new Texture(texType,texFolder);
 }
 
 

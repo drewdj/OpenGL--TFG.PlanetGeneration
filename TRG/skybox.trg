@@ -36,6 +36,7 @@
 16 18 19
 20 21 22
 20 22 23
-vshader.txt
-fshader.txt
+Shaders/Vertex/skyboxVertexShader.txt
+Shaders/Fragment/skyboxFragmentShader.txt
+2
 skybox1

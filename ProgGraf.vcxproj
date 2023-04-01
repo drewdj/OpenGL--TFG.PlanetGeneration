@@ -1,4 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -54,10 +53,8 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -152,12 +149,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
     <ClCompile Include="cube.cpp" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="icos.cpp" />
     <ClCompile Include="icosahedron.cpp" />
     <ClCompile Include="inputManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,18 +160,16 @@
     <ClCompile Include="render.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shader.cpp" />
-    <ClCompile Include="spaceShip.cpp" />
+    <ClCompile Include="skybox.cpp" />
     <ClCompile Include="spatialHashing.cpp" />
     <ClCompile Include="system.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bullet.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="collider.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="cube.h" />
-    <ClInclude Include="enemy.h" />
     <ClInclude Include="icosahedron.h" />
     <ClInclude Include="inputManager.h" />
     <ClInclude Include="mesh.h" />
@@ -185,28 +177,34 @@
     <ClInclude Include="render.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shader.h" />
-    <ClInclude Include="spaceShip.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="spatialHashing.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bullet.trg" />
-    <None Include="cube.trg" />
-    <None Include="cube2.trg" />
-    <None Include="ico.trg" />
+    <None Include="fshader.txt" />
     <None Include="Makefile" />
     <None Include="progGrafica" />
-    <None Include="triangle.trg" />
+    <None Include="TRG\cube.trg" />
+    <None Include="TRG\cube2.trg" />
+    <None Include="TRG\skybox.trg" />
+    <None Include="TRG\triangle.trg" />
+    <None Include="vshader.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fshader.txt" />
+    <Text Include="Shaders\Fragment\lightFragmentShader.txt" />
+    <Text Include="Shaders\Fragment\planetFragmentShader.txt" />
+    <Text Include="Shaders\Fragment\skyboxFragmentShader.txt" />
+    <Text Include="Shaders\Tessellation\planetTessellationControlShader.txt" />
+    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.txt" />
+    <Text Include="Shaders\Vertex\lightVertexShader.txt" />
+    <Text Include="shaders\Vertex\planetVertexShader.txt" />
+    <Text Include="shaders\Vertex\skyboxVertexShader.txt" />
     <Text Include="tesControlShader.txt" />
     <Text Include="tesEvaluationShader.txt" />
-    <Text Include="vshader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

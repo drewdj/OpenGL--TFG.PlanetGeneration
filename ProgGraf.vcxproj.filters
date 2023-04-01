@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="collider.cpp" />
+    <ClCompile Include="cube.cpp" />
+    <ClCompile Include="icosahedron.cpp" />
+    <ClCompile Include="inputManager.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="object.cpp" />
+    <ClCompile Include="render.cpp" />
+    <ClCompile Include="scene.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="spatialHashing.cpp" />
+    <ClCompile Include="system.cpp" />
+    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="skybox.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="collider.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="cube.h" />
+    <ClInclude Include="icosahedron.h" />
+    <ClInclude Include="inputManager.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="object.h" />
+    <ClInclude Include="render.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="spatialHashing.h" />
+    <ClInclude Include="system.h" />
+    <ClInclude Include="texture.h" />
+    <ClInclude Include="vertex.h" />
+    <ClInclude Include="skybox.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fshader.txt" />
+    <None Include="Makefile" />
+    <None Include="progGrafica" />
+    <None Include="vshader.txt" />
+    <None Include="TRG\cube.trg">
+      <Filter>TRG</Filter>
+    </None>
+    <None Include="TRG\cube2.trg">
+      <Filter>TRG</Filter>
+    </None>
+    <None Include="TRG\skybox.trg">
+      <Filter>TRG</Filter>
+    </None>
+    <None Include="TRG\triangle.trg">
+      <Filter>TRG</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="tesControlShader.txt" />
+    <Text Include="tesEvaluationShader.txt" />
+    <Text Include="shaders\Vertex\planetVertexShader.txt">
+      <Filter>Shaders\Vertex</Filter>
+    </Text>
+    <Text Include="shaders\Vertex\skyboxVertexShader.txt">
+      <Filter>Shaders\Vertex</Filter>
+    </Text>
+    <Text Include="Shaders\Fragment\planetFragmentShader.txt">
+      <Filter>Shaders\Fragment</Filter>
+    </Text>
+    <Text Include="Shaders\Fragment\skyboxFragmentShader.txt">
+      <Filter>Shaders\Fragment</Filter>
+    </Text>
+    <Text Include="Shaders\Tessellation\planetTessellationControlShader.txt">
+      <Filter>Shaders\Tessellation</Filter>
+    </Text>
+    <Text Include="Shaders\Tessellation\planetTessellationEvaluationShader.txt">
+      <Filter>Shaders\Tessellation</Filter>
+    </Text>
+    <Text Include="Shaders\Vertex\lightVertexShader.txt">
+      <Filter>Shaders\Vertex</Filter>
+    </Text>
+    <Text Include="Shaders\Fragment\lightFragmentShader.txt">
+      <Filter>Shaders\Fragment</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{6c2c4eec-d886-41dd-b899-2094475b0b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Vertex">
+      <UniqueIdentifier>{7d16aaaa-2da2-40e3-9a3b-77d6e3ce2d35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{2b2908a2-b053-4984-8aa6-0c3c5012f1c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TRG">
+      <UniqueIdentifier>{1af69cf2-59de-435a-a03d-d8301d4b28cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Fragment">
+      <UniqueIdentifier>{d4a1eec0-b39a-48a3-82e2-0b5192857a68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Tessellation">
+      <UniqueIdentifier>{1fa93c3c-9ce5-4942-beee-ac6c19ac903e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

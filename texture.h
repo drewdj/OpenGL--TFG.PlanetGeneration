@@ -11,6 +11,7 @@ public:
 
     Texture(std::string filename);
     Texture(int textType, std::string folder);
+    Texture();
     void bind(int textureunitIdx);
 
 };

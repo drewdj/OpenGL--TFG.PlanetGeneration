@@ -2,23 +2,23 @@
 
 layout(location=0) uniform mat4 MVP;
 layout(location=1) uniform mat4 M;
-layout(location=3) uniform samplerCube cubeMap;
+layout(location=3) uniform sampler3D noiseTexture;
 
 layout (location=6) uniform float radius;
 layout (location=8) uniform float time;
 
 layout (triangles, equal_spacing, ccw) in;
 
-patch in vec4 tescontrol_color;
 in vec4 tescontrol_pos[];
 in vec4 tescontrol_norm[];
 patch in int tescontrol_TextType;
 
 
-out vec4 fcolor;
+
 out vec4 fpos;
 out vec4 fnorm;
 out flat int fTextType;
+out vec4 fcolor;
 
 //
 // psrdnoise3.glsl
@@ -325,7 +325,7 @@ void main() {
     // barycentric interpolation    
     vec4 pos = u * pos0 + v * pos1 + w * pos2;
 
-    vec4 localPos = inverse(MVP) * pos;
+    vec4 localPos = pos;
 
     vec3 dir = normalize(localPos.xyz);  
     
@@ -336,8 +336,8 @@ void main() {
         vec3 v2 = 1*vec3(localPos);
         vec3 p = vec3(0.0);
         vec3 g;
-        //float alpha = time;
-        float alpha = 0.0;
+        float alpha = time;
+        //float alpha = 0.0;
 
         //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
 
@@ -346,12 +346,13 @@ void main() {
         n += 0.2*psrdnoise(2.0*v2+0.1, p*2.0, 2.0*alpha, g);
         n += 0.1*psrdnoise(3.0*v2+0.2, p*4.0, 4.0*alpha, g);
         n += 0.05*psrdnoise(8.0*v2+0.3, p*8.0, 8.0*alpha, g);
-        n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);
-
-
-
-        
+        n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);        
         vec3 mixcolor = vec3(n);
+        float test2 = mixcolor.z;
+        
+           
+        //guardar mixcolor en Texture
+        
         vec4 test = vec4(mixcolor, 1.0);
 
     float maxHeight = 1.08;
@@ -359,7 +360,7 @@ void main() {
 
     float oldRange = (1 - 0);
     float newRange = (maxHeight - minHeight);
-    float newValue = (((test.x - 0) * newRange) / oldRange) + minHeight;
+    float newValue = (((test2 - 0) * newRange) / oldRange) + minHeight;
 
     spherePos.x *= newValue;
     spherePos.y *= newValue;
@@ -367,11 +368,10 @@ void main() {
 
     gl_Position = MVP * spherePos;
 	
-	fcolor = tescontrol_color;
 	fpos = spherePos;
 	fnorm = tescontrol_norm[gl_PrimitiveID];
 	fTextType = tescontrol_TextType;
-
+    fcolor = vec4(mixcolor, 1.0);
 
 	}
 

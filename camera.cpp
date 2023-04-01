@@ -10,8 +10,6 @@ Camera::Camera(glm::vec3 pos, glm::vec3 lookAt, cameraType_e type)
 
     this->position = pos;
     this->orientation = glm::quat(lookAt);
-    
-   
     this->viewMatrix = glm::mat4(1.0f);
     this->type = type;
 	this->zoffset;

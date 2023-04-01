@@ -6,11 +6,10 @@
 #include "object.h"
 #include "scene.h"
 #include "inputManager.h"
-#include "spaceShip.h"
 #include "system.h"
 
-#include "enemy.h"
 #include "cube.h"
+#include "skybox.h"
 #include "icosahedron.h"
 
 
@@ -75,15 +74,20 @@ int main(int argc, char** argv)
 	scene->setCamera(new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0.25), perspective),window);
 	render->setCamera(scene->getCamera());
 
-	Object* icosahedron = new Icosahedron(10);
+	Object* icosahedron = new Icosahedron(0); 
 	icosahedron->position.z -= 2;
 	render->setupObject(icosahedron);
 	scene->addObject(icosahedron);	
 
+	Object* light = new Cube("TRG/cube.trg");
+	light->scale /= 5;
+	light->position = glm::vec3(0.0f, 0.0f, 3.0f);
+	render->setupObject(light);
+	scene->addObject(light);
 
-	Object* cube = new Cube("cube.trg");
-	render->setupObject(cube);
-	scene->addObject(cube);
+	Object* skybox = new Skybox("TRG/skybox.trg");
+	render->setupObject(skybox);
+	scene->addObject(skybox);
 
 	
 

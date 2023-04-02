@@ -312,69 +312,52 @@ float psrdnoise(vec3 x, vec3 period, float alpha, out vec3 gradient)
 
 void main() {    
 
-   // barycentric coordinates
     float u = gl_TessCoord.x;
     float v = gl_TessCoord.y;
     float w = gl_TessCoord.z;
 
-    // barycentric interpolation
+    vec3 pos = vec3(0.0);
+    vec3 normal = vec3(0.0);
+    vec2 texCoord = vec2(0.0);
 
+    for (int i = 0; i < 3; ++i) {
+        pos += tescontrol_pos[i].xyz * gl_TessCoord[i];
+        normal += tescontrol_norm[i].xyz * gl_TessCoord[i];
+    }
 
-    vec4 pos0 = gl_in[0].gl_Position;
-    vec4 pos1 = gl_in[1].gl_Position;
-    vec4 pos2 = gl_in[2].gl_Position;
+    // Normalizar posiciones para formar una esfera
+    pos = normalize(pos);
+
+    fpos = vec4(pos, 1.0);
     
-    // barycentric interpolation    
-    vec4 pos = u * pos0 + v * pos1 + w * pos2;
+    normal = normalize(pos);
 
-    vec4 localPos = inverse(MVP) * pos;
+    vec3 v2 = 1*vec3(pos);
+    vec3 p = vec3(0.0);
+    vec3 g;
+    float alpha = time;
+    //float alpha = 0.0;
 
-    vec3 dir = normalize(localPos.xyz);  
+    //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
+
+    float n = 0.5;
+    n += 0.4*psrdnoise(v2, p, alpha, g);
+    n += 0.2*psrdnoise(2.0*v2+0.1, p*2.0, 2.0*alpha, g);
+    n += 0.1*psrdnoise(3.0*v2+0.2, p*4.0, 4.0*alpha, g);
+    n += 0.05*psrdnoise(8.0*v2+0.3, p*8.0, 8.0*alpha, g);
+    n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);        
+
+    float multiplicador = 0.5;
+
+    fpos += vec4(normalize(pos) * n * multiplicador, 0.0);
     
-    vec4 spherePos = vec4(dir,1.0);
-    
-    spherePos * 10;
+    fnorm = normalize(vec4(normal, 1.0));
+    fcolor = vec4(0.0f,0.0f,0.0f,1.0f);
 
-        vec3 v2 = 1*vec3(localPos);
-        vec3 p = vec3(0.0);
-        vec3 g;
-        float alpha = time;
-        //float alpha = 0.0;
+    gl_Position = MVP * fpos;
 
-        //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
 
-        float n = 0.5;
-        n += 0.4*psrdnoise(v2, p, alpha, g);
-        n += 0.2*psrdnoise(2.0*v2+0.1, p*2.0, 2.0*alpha, g);
-        n += 0.1*psrdnoise(3.0*v2+0.2, p*4.0, 4.0*alpha, g);
-        n += 0.05*psrdnoise(8.0*v2+0.3, p*8.0, 8.0*alpha, g);
-        n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);        
-        vec3 mixcolor = vec3(n);
-        float test2 = mixcolor.x;
-        
-           
-        //guardar mixcolor en Texture
-        
-
-    float maxHeight = 1.08;
-    float minHeight = 0.95;
-
-    float oldRange = (1 - 0);
-    float newRange = (maxHeight - minHeight);
-    float newValue = (((test2 - 0) * newRange) / oldRange) + minHeight;
-
-    spherePos.x *= newValue;
-    spherePos.y *= newValue;
-    spherePos.z *= newValue;
-
-    gl_Position = MVP * spherePos;
-	
-	fpos = spherePos;
-	fnorm = tescontrol_norm[gl_PrimitiveID];
-	fTextType = tescontrol_TextType;
-    fcolor = vec4(mixcolor, 1.0);
-
-	}
+}
 
     
 

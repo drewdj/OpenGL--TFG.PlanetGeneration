@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
-	light->position = glm::vec3(0.0f, 0.0f, 3.0f);
+	light->position = glm::vec3(0.0f, 0.0f, 5.0f);
 	render->setupObject(light);
 	scene->addObject(light);
 

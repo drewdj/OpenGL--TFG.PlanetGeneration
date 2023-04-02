@@ -36,10 +36,10 @@ void main()
             fragColor = vec4(0.9-(radius-1)*2,0.95-(radius-1),1.0f,1.0f);
         }
 
-        //vec4 normal = normalize(fpos);
+        //vec4 normal = normalize(fnorm);
         //vec4 lightDir = normalize(lightPos - fpos);        
         //float diffuse = max(dot(normal, lightDir), 0.0);         
         //gli_FragColor = fragColor * lightColor * diffuse;
         
-        gli_FragColor = fragColor;
+        gli_FragColor = fcolor;
 }

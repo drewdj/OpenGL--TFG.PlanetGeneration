@@ -1,3 +1,7 @@
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include <iostream> 
 #include "common.h"
 #include <vector>
@@ -11,6 +15,9 @@
 #include "cube.h"
 #include "skybox.h"
 #include "icosahedron.h"
+
+
+
 
 
 
@@ -56,7 +63,8 @@ int main(int argc, char** argv)
 	glfwMakeContextCurrent(window);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	//TODO
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 
 
@@ -67,14 +75,26 @@ int main(int argc, char** argv)
 
 	InputManager::init(window);
 
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
+	
+	bool show_demo_window = false;
+	bool show_another_window = false;
+	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+	glm::vec4 test = glm::vec4(0.45f, 0.55f, 0.60f, 1.00f);
+
 
 	Render* render = new Render();
 	Scene* scene = new Scene();
 	System::scene = scene;
-	scene->setCamera(new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0.25), perspective),window);
+	scene->setCamera(new Camera(glm::vec3(0, 0, -2), glm::vec3(0, 0, 0.25), perspective),window);
 	render->setCamera(scene->getCamera());
 
-	Object* icosahedron = new Icosahedron(0); 
+	Object* icosahedron = new Icosahedron(10);
 	icosahedron->position.z -= 2;
 	render->setupObject(icosahedron);
 	scene->addObject(icosahedron);	
@@ -89,16 +109,69 @@ int main(int argc, char** argv)
 	render->setupObject(skybox);
 	scene->addObject(skybox);
 
-	
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 
 	while (!glfwWindowShouldClose(window))
 	{
 
 		if (renderfps(60.0f, window)) {
+
+
+
+			
 			scene->step(0.0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			
 			render->drawScene(scene);
+
+			if (show_demo_window)
+				ImGui::ShowDemoWindow(&show_demo_window);
+			
+			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+			{
+				static float f = 0.0f;
+				static int counter = 0;
+
+				ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it
+				ImGui::Checkbox("Demo Window", &show_demo_window);
+				ImGui::SliderFloat("time", &icosahedron->testTime, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
+				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
+				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
+				ImGui::Separator();
+
+				ImGui::ColorEdit3("light color", (float*)&lightColor); // Edit 3 floats representing a color
+				icosahedron->lightColor = lightColor;
+				light->lightColor = lightColor;
+				ImGui::Separator();
+
+				//select color ImGui
+				ImGui::ColorEdit3("water color", (float*)&icosahedron->waterColor); // Edit 3 floats representing a color
+				ImGui::ColorEdit3("land color", (float*)&icosahedron->landColor); // Edit 3 floats representing a color
+				ImGui::ColorEdit3("mountain color", (float*)&icosahedron->mountainColor); // Edit 3 floats representing a color
+				ImGui::Separator();
+
+				ImGui::SliderFloat("water level", &icosahedron->waterLevel, 0.0f, 1.0f);
+				ImGui::SliderFloat("land level", &icosahedron->landLevel, 0.0f, 1.0f);
+				ImGui::SliderFloat("mountain level", &icosahedron->mountainLevel, 0.0f, 1.0f);
+				ImGui::Separator();
+
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+				ImGui::End();
+			}
+
+			
+
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			
+			
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
@@ -112,7 +185,10 @@ int main(int argc, char** argv)
 	}
 
 	//delete icosahedron;
-
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+	
 	return 0;
 
 }

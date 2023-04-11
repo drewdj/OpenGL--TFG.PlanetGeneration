@@ -1,11 +1,13 @@
 #version 460 core
 
-layout(location=0) uniform mat4 MVP;
-layout(location=1) uniform mat4 M;
-layout(location=3) uniform sampler3D noiseTexture;
+uniform mat4 MVP;
+uniform mat4 M;
 
-layout (location=6) uniform float radius;
-layout (location=8) uniform float time;
+uniform float time;
+uniform float manualTime;
+uniform float textureCoord;
+uniform float gradient;
+
 
 layout (triangles, equal_spacing, ccw) in;
 
@@ -13,12 +15,12 @@ in vec4 tescontrol_pos[];
 in vec4 tescontrol_norm[];
 patch in int tescontrol_TextType;
 
-
-
 out vec4 fpos;
 out vec4 fnorm;
 out flat int fTextType;
 out vec4 fcolor;
+out flat float fnoise;
+
 
 //
 // psrdnoise3.glsl
@@ -332,29 +334,54 @@ void main() {
     
     normal = normalize(pos);
 
-    vec3 v2 = 1*vec3(pos);
-    vec3 p = vec3(0.0);
+    vec3 v2 = textureCoord*vec3(pos);
+    vec3 periodic = vec3(0.0);
     vec3 g;
-    float alpha = time;
-    //float alpha = 0.0;
+    //float alpha = time;
+    float alpha = manualTime;
 
     //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
 
     float n = 0.5;
-    n += 0.4*psrdnoise(v2, p, alpha, g);
-    n += 0.2*psrdnoise(2.0*v2+0.1, p*2.0, 2.0*alpha, g);
-    n += 0.1*psrdnoise(3.0*v2+0.2, p*4.0, 4.0*alpha, g);
-    n += 0.05*psrdnoise(8.0*v2+0.3, p*8.0, 8.0*alpha, g);
-    n += 0.025*psrdnoise(16.0*v2, p*16.0, 16.0*alpha, g);        
-
-    float multiplicador = 0.5;
-
-    fpos += vec4(normalize(pos) * n * multiplicador, 0.0);
+    n += 0.4*psrdnoise(v2, periodic, alpha, g);
+    n += 0.2*psrdnoise(2.0*v2+0.1, periodic*2.0, 2.0*alpha, g);
+    n += 0.1*psrdnoise(3.0*v2+0.2, periodic*4.0, 4.0*alpha, g);
+    n += 0.05*psrdnoise(8.0*v2+0.3, periodic*8.0, 8.0*alpha, g);
+    n += 0.025*psrdnoise(16.0*v2, periodic*16.0, 16.0*alpha, g);       
     
+
+        
+    fpos += vec4(pos * n * gradient, 0.0);
+
+    float delta = 0.1;
+
+    // Calcular el ruido en puntos cercanos a fpos
+    float nX = psrdnoise(vec3(fpos.x + delta, fpos.y, fpos.z), periodic, alpha, g);
+    float nY = psrdnoise(vec3(fpos.x, fpos.y + delta, fpos.z), periodic, alpha, g);
+    float nZ = psrdnoise(vec3(fpos.x, fpos.y, fpos.z + delta), periodic, alpha, g);
+
+    // Calcular las diferencias en cada eje
+    float dX = nX - n;
+    float dY = nY - n;
+    float dZ = nZ - n;
+
+    // Calcular la normal y normalizarla
+    vec3 normalNoise = vec3(dX, dY, dZ);
+    fnorm = normalize(vec4(normalNoise, 0.0));
+    
+    
+    fnoise = n;
     fnorm = normalize(vec4(normal, 1.0));
-    fcolor = vec4(0.0f,0.0f,0.0f,1.0f);
+    fcolor = vec4(vec3(n), 1.0);
+
 
     gl_Position = MVP * fpos;
+
+
+
+
+
+
 
 
 }

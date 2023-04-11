@@ -1,9 +1,8 @@
 #version 430
 #extension GL_NV_shadow_samplers_cube : enable
 
-layout(location=0) uniform mat4 MVP;
-layout(location=1) uniform mat4 M;
-layout(location=4) uniform int textType;
+uniform mat4 MVP;
+uniform mat4 M;
 
 
 layout(location=0)in vec4 vpos;
@@ -13,13 +12,12 @@ layout(location=2)in vec4 vnorm;
 
 out vec4 fpos;
 out vec4 fnorm;
-flat out int fTextType;
 
 void main() {
 
 	fpos=M*vpos;	
 	fnorm=normalize(inverse(transpose(M))*vnorm);	//TODO: no se que hace esto
-	fTextType = textType; 
+
 
 	vec4 pos = MVP * vpos;	
 	gl_Position=pos;

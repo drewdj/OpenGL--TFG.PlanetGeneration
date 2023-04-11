@@ -72,7 +72,7 @@ void Render::drawObjectGL4(Object* obj){
 
 	obj->computeMatrix();
 
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec4 lightColor = obj->lightColor;
 	
 	bufferObject_t bo=boList[obj->id];
 	
@@ -82,6 +82,7 @@ void Render::drawObjectGL4(Object* obj){
 
 
 	glUseProgram(obj->shader->programID);
+	
 	unsigned int vpos=0;
 	glEnableVertexAttribArray(vpos);
 	glVertexAttribPointer(vpos,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,posicion));
@@ -107,19 +108,58 @@ void Render::drawObjectGL4(Object* obj){
 		testView = glm::mat4(glm::mat3(view));
 	}
 	
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "MVP"), 1, GL_FALSE, &(proj * testView * obj->getMatrix())[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "M"), 1, GL_FALSE, &(obj->getMatrix())[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "V"), 1, GL_FALSE, &(view)[0][0]);
 	
-	glUniformMatrix4fv(0,1,GL_FALSE,&(proj* testView *obj->getMatrix())[0][0]);
-	glUniformMatrix4fv(1,1,GL_FALSE,&(obj->getMatrix())[0][0]);	
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
+
+	//ruido
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "time"), (float)clock() / CLOCKS_PER_SEC);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "manualTime"), obj->testTime);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "textureCoord"), obj->textureCoord);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "gradient"), obj->gradient);
+
 	glUniform4fv(2,1,&lightPos[0]);
-	glUniform1i(3, textureUnit);
+
+	//skybox
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "textureUnit"), textureUnit);
+
+	//camera
+	glUniform3fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &camPos[0]);
+	
+	//light
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
+	
+	
+
+	
 	glUniform1i(4, obj->mesh->tex->textType);
 	glUniform3fv(5, 1, &camPos[0]);
-	glUniform1f(6, obj->mesh->radius);	
-	glUniformMatrix4fv(7, 1, GL_FALSE, &(testView)[0][0]);
+	
+
+
+
+	
 	//get time as float
 	float time = (float)clock() / CLOCKS_PER_SEC;
-	glUniform1f(8, time );
+	glUniform1f(8, obj->testTime );
 	glUniform4fv(9, 1, &lightColor[0]);
+	glUniform1f(11, obj->textureCoord);
+	glUniform1f(12, obj->gradient);
+
+
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "waterColor"),1,&obj->waterColor[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "landColor"), 1, &obj->landColor[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "mountainColor"), 1, &obj->mountainColor[0]);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellation"), obj->tessellation);
+
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "waterLevel"), obj->waterLevel);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "landLevel"), obj->landLevel);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "mountainLevel"), obj->mountainLevel);
+	
 
 
 	//Pintar lineas

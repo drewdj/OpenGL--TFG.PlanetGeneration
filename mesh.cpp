@@ -101,7 +101,7 @@ Mesh::Mesh(int vertex) {
 
 void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro de forma matematica desplazando por angulos
 {
-	radius = 5;
+	radius = 3;
 	const float H_ANGLE = PI / 180 * 72;    // 72 degree = 360 / 5
 	const float V_ANGLE = atanf(1.0f / 2);  // elevation = 26.565 degree
 

@@ -1,7 +1,7 @@
 #version 430
 #extension GL_NV_shadow_samplers_cube : enable
 
-layout(location=3) uniform samplerCube cubeMap;
+uniform samplerCube textureUnit;
 
 
 
@@ -12,7 +12,7 @@ out vec4 gli_FragColor;
 
 void main()
 {	
-		vec4 textureColor = texture(cubeMap,fpos.xyz);
+		vec4 textureColor = texture(textureUnit,fpos.xyz);
 		
 		gli_FragColor = textureColor;
 }

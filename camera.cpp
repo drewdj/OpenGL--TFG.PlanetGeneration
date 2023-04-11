@@ -3,6 +3,10 @@
 #include <iostream>
 #include <time.h>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 
 
 Camera::Camera(glm::vec3 pos, glm::vec3 lookAt, cameraType_e type)
@@ -117,13 +121,42 @@ void Camera::selectCameraType(cameraType_e type)
 void Camera::step()
 {
 
-    glfwGetCursorPos(window, &xpos, &ypos);
-    glfwGetWindowSize(window, &screenx, &screeny);
-    glfwSetCursorPos(window, 0, 0);
+    ImGuiIO& io = ImGui::GetIO();
+    static ImVec2 prevMousePos = io.MousePos;
+	float mouseDeltaX = io.MousePos.x - prevMousePos.x;
+	float mouseDeltaY = io.MousePos.y - prevMousePos.y;
+	ImVec2 mouseDelta = ImVec2(mouseDeltaX, mouseDeltaY);
+    prevMousePos = io.MousePos;
+
+
+    if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
+    {
+        if (ImGui::IsMouseDragging(1)) {
+            this->xoffset = mouseDelta.x / 4;
+            this->yoffset = mouseDelta.y / 4;
+        }
+        else
+        {
+            this->xoffset = 0;
+            this->yoffset = 0;
+        }
+    }
+
+
+
+
+
+    
+    //TODO
+    //glfwGetCursorPos(window, &xpos, &ypos);
+    //glfwGetWindowSize(window, &screenx, &screeny);
+    //glfwSetCursorPos(window, 0, 0);
 
     zoffset = 0;
-    this->xoffset = mouseSpeed * xpos;
-    this->yoffset = mouseSpeed * ypos;
+
+    
+    //this->xoffset = mouseSpeed * xpos;
+    //this->yoffset = mouseSpeed * ypos;
 
     checkKeys();
 

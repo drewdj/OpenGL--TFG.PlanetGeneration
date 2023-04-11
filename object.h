@@ -12,6 +12,24 @@ public:
 	int id=0;
 	int typeObject;
 	bool markedDelete=false;
+	
+	float testTime = 0.0f;
+	float textureCoord = 0.0f;
+	float gradient = 0.0f;
+
+	glm::vec4 waterColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+	glm::vec4 landColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+	glm::vec4 mountainColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	float waterLevel = 0.0f;
+	float landLevel = 0.0f;
+	float mountainLevel = 0.0f;
+	
+	int tessellation = 64;
+
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	
 	glm::mat4 modelMatrix;
 	glm::vec3 position=glm::vec3(0,0,0);
 	glm::vec3 rotation=glm::vec3(0,0,0);

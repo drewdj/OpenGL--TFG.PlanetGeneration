@@ -1,9 +1,10 @@
 #version 460 core
 
-layout(location=0) uniform mat4 MVP;
-layout(location=1) uniform mat4 M;
-layout(location=7) uniform mat4 V;
-layout (location=5) uniform vec3 camPos;
+uniform mat4 MVP;
+uniform mat4 M;
+uniform mat4 V;
+uniform vec3 camPos;
+uniform int tessellation;
 
 
 layout (vertices = 3) out;
@@ -44,11 +45,11 @@ if (gl_InvocationID == 0) //Planeta
 			
 
 
-		gl_TessLevelOuter[0] = 64; 
-        gl_TessLevelOuter[1] = 64; 
-        gl_TessLevelOuter[2] = 64; 
+		gl_TessLevelOuter[0] = tessellation; 
+        gl_TessLevelOuter[1] = tessellation; 
+        gl_TessLevelOuter[2] = tessellation; 
         
-        gl_TessLevelInner[0] = 64;
+        gl_TessLevelInner[0] = tessellation;
     }
 
 

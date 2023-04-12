@@ -4,7 +4,7 @@
 uniform vec4 lightPos;
 uniform vec4 lightColor;
 
-uniform vec4 camPos;
+uniform vec3 camPos;
 
 uniform vec4 waterColor;
 uniform vec4 landColor;
@@ -53,14 +53,14 @@ void main()
         float diffuse = max(dot(normal, lightDir), 0.0);
 
 		float specularLight = 0.5;
-		vec4 viewDir = normalize(camPos - fpos);
+		vec3 viewDir = normalize(camPos - fpos.xyz);
 		vec4 reflectDir = reflect(-lightDir, normal);
-		float specAmount = pow(max(dot(viewDir, reflectDir), 0.0), 8);
+		float specAmount = pow(max(dot(viewDir, reflectDir.xyz), 0.0), 8);
 		float specular = specularLight * specAmount;
 		
 		//specular no funciona
-        //gli_FragColor = testColor * lightColor * (diffuse+ambient+specular);
-		gli_FragColor = testColor * lightColor * (diffuse+ambient);
+        gli_FragColor = testColor * lightColor * (diffuse+ambient+specular);
+		//gli_FragColor = testColor * lightColor * (diffuse+ambient);
         
         //gli_FragColor = testColor;
 }

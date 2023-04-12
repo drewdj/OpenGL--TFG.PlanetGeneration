@@ -132,24 +132,6 @@ void Render::drawObjectGL4(Object* obj){
 	//light
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
-	
-	
-
-	
-	glUniform1i(4, obj->mesh->tex->textType);
-	glUniform3fv(5, 1, &camPos[0]);
-	
-
-
-
-	
-	//get time as float
-	float time = (float)clock() / CLOCKS_PER_SEC;
-	glUniform1f(8, obj->testTime );
-	glUniform4fv(9, 1, &lightColor[0]);
-	glUniform1f(11, obj->textureCoord);
-	glUniform1f(12, obj->gradient);
-
 
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "waterColor"),1,&obj->waterColor[0]);
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "landColor"), 1, &obj->landColor[0]);

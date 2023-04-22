@@ -94,14 +94,14 @@ Mesh::Mesh(int vertex) {
 	std::string tesControlShader = "Shaders/Tessellation/planetTessellationControlShader.glsl";
 	std::string tesEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
 
-	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
+	shader = new GLShader(vshader, fshader);
 
 	tex = new Texture();
 }
 
 void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro de forma matematica desplazando por angulos
 {
-	radius = 3;
+	radius = 1;
 	const float H_ANGLE = PI / 180 * 72;    // 72 degree = 360 / 5
 	const float V_ANGLE = atanf(1.0f / 2);  // elevation = 26.565 degree
 
@@ -147,9 +147,6 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 	v[11][1] = 0;
 	v[11][2] = -radius;
 	v[11][3] = 0;
-
-	//calcular la normal de cada vertice
-
 	
 
 	//meter los vertices en vertexList
@@ -184,6 +181,51 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 
 
 }
+
+void Mesh::computeIcosahedronVertices2()
+{
+	radius = 1;
+	const float H_ANGLE = PI / 180 * 72;    // 72 degree = 360 / 5
+	const float V_ANGLE = atanf(1.0f / 2);  // elevation = 26.565 degree
+
+	// 1st vertex (top vertex)
+	vertex_t vTop;
+	vTop.posicion = glm::vec4(0, 0, radius, 1);
+	vertexList->push_back(vTop);
+
+	// 2nd to 6th vertices
+	float hAngle1 = -PI / 2 - H_ANGLE / 2;  // start from -126 deg at 2nd row
+	for (int i = 1; i <= 5; ++i)
+	{
+		vertex_t v;
+		float z = radius * sinf(V_ANGLE);
+		float xy = radius * cosf(V_ANGLE);
+		v.posicion = glm::vec4(xy * cosf(hAngle1), xy * sinf(hAngle1), z, 1);
+		v.color = glm::vec4(1, 0, 0, 1);
+		vertexList->push_back(v);
+		hAngle1 += H_ANGLE;
+	}
+
+	// 7th to 11th vertices
+	float hAngle2 = -PI / 2;                // start from -90 deg at 3rd row
+	for (int i = 1; i <= 5; ++i)
+	{
+		vertex_t v;
+		float z = radius * sinf(-V_ANGLE);
+		float xy = radius * cosf(-V_ANGLE);
+		v.posicion = glm::vec4(xy * cosf(hAngle2), xy * sinf(hAngle2), z, 1);
+		v.color = glm::vec4(1, 0, 0, 1);
+		vertexList->push_back(v);
+		hAngle2 += H_ANGLE;
+	}
+
+	// 12th vertex (bottom vertex)
+	vertex_t vBottom;
+	vBottom.posicion = glm::vec4(0, 0, -radius, 1);
+	vBottom.color = glm::vec4(1, 0, 0, 1);
+	vertexList->push_back(vBottom);
+}
+
 
 void Mesh::normalize(std::array<float, 3> &v) {
 	float d = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);

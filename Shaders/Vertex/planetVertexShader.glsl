@@ -18,7 +18,7 @@ flat out int fTextType;
 
 void main() {
 
-	fpos=M*vpos;	
+	fpos=vpos;	
 	fnorm=normalize(inverse(transpose(M))*vnorm);
 	vec4 pos = MVP * vpos;	
 	

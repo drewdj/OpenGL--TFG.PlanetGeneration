@@ -17,6 +17,8 @@ public:
 	float textureCoord = 0.0f;
 	float gradient = 0.0f;
 
+	float radius = 1.0f;
+
 	glm::vec4 waterColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	glm::vec4 landColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
 	glm::vec4 mountainColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);

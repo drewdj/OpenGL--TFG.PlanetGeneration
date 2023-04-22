@@ -142,6 +142,7 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("time", &icosahedron->testTime, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
+				ImGui::SliderFloat("radius", &icosahedron->radius, 1.0f, 10.0f);
 				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
 				ImGui::Separator();
 

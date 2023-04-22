@@ -96,10 +96,6 @@ void Render::drawObjectGL4(Object* obj){
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
 	glm::vec4 lightPos(0.0f,0.0f,5.0f,1.0f);
-
-	//get camera position
-
-	glm::vec3 camPos(cam->getPosition());
 	
 
 	int textureUnit = 0;
@@ -129,9 +125,6 @@ void Render::drawObjectGL4(Object* obj){
 
 	//skybox
 	glUniform1i(glGetUniformLocation(obj->shader->programID, "textureUnit"), textureUnit);
-
-	//camera
-	glUniform3fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &camPos[0]);
 	
 	//light
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
@@ -145,6 +138,9 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "waterLevel"), obj->waterLevel);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "landLevel"), obj->landLevel);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "mountainLevel"), obj->mountainLevel);
+
+	//planeta
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "radius"), obj->radius);
 	
 
 

@@ -3,7 +3,6 @@
 uniform mat4 MVP;
 uniform mat4 M;
 uniform mat4 V;
-uniform vec3 camPos;
 uniform int tessellation;
 
 
@@ -52,6 +51,8 @@ if (gl_InvocationID == 0) // Planeta
     gl_TessLevelOuter[2] = adjustedTessellation;
 
     gl_TessLevelInner[0] = adjustedTessellation;
+
+
 }
 
 

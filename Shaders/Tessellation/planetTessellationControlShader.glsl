@@ -30,27 +30,30 @@ void main(){
 	tescontrol_TextType = fTextType[gl_InvocationID];
 
 	
-if (gl_InvocationID == 0) //Planeta
-    {
+    float minTessellation = 1.0;
+    float maxTessellation = 10.0;
+    float maxDistance = 5.0;
 
-		//TODO cambiar a lados no centro
-		
-		//float angle = acos(dot(camPos, fpos[0].xyz) / (length(camPos) * length(fpos[0].xyz)));
-		
-		vec4 center = (fpos[0] + fpos[1] + fpos[2]) / 3.0;
-		
-		center = V * center;
-		
-		float dist = -center.z;
-			
+	
+if (gl_InvocationID == 0) // Planeta
+{
+    vec4 center_object_space = (tescontrol_pos[0] + tescontrol_pos[1] + tescontrol_pos[2]) / 3.0;
+    vec4 center_eye_space = V * M * center_object_space;
 
+    // Utiliza la componente z en el espacio de la vista para ajustar la teselación
+    float distToCamera = abs(center_eye_space.z);
 
-		gl_TessLevelOuter[0] = tessellation; 
-        gl_TessLevelOuter[1] = tessellation; 
-        gl_TessLevelOuter[2] = tessellation; 
-        
-        gl_TessLevelInner[0] = tessellation;
-    }
+    // Ajustar el nivel de teselación en función de la distancia a la cámara
+    float tessellationFactor = 1.0 - clamp(distToCamera / maxDistance, 0.0, 1.0);
+    float adjustedTessellation = mix(minTessellation, maxTessellation, tessellationFactor);
+
+    gl_TessLevelOuter[0] = adjustedTessellation;
+    gl_TessLevelOuter[1] = adjustedTessellation;
+    gl_TessLevelOuter[2] = adjustedTessellation;
+
+    gl_TessLevelInner[0] = adjustedTessellation;
+}
+
 
 
     

@@ -35,7 +35,6 @@ public:
 	void loadFromFile(std::string fileName);
 	void setColor(int idxVertex, glm::vec4 color);
 	void computeIcosahedronVertices();
-	void computeIcosahedronVertices2();
 	void normalize(std::array<float, 3> &v);
 
 	std::array<float, 3> calculateDistance(std::array<float, 3> vertex0, std::array<float, 3> vertex1, long depth);

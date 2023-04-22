@@ -63,4 +63,7 @@ void main()
 		//gli_FragColor = testColor * lightColor * (diffuse+ambient);
         
         gli_FragColor = testColor;
+
+		gli_FragColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 }

@@ -96,7 +96,11 @@ void Render::drawObjectGL4(Object* obj){
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
 	glm::vec4 lightPos(0.0f,0.0f,5.0f,1.0f);
-	glm::vec3 camPos(cam->getForwardVector());
+
+	//get camera position
+
+	glm::vec3 camPos(cam->getPosition());
+	
 
 	int textureUnit = 0;
 	obj->mesh->tex->bind(textureUnit);

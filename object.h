@@ -43,7 +43,7 @@ public:
 	Collider* collider;
 		
 	Object();
-	Object(int vertex);
+	Object(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex);
 	Object(std::string fileName);
 	glm::mat4 getMatrix();
 	void computeMatrix();

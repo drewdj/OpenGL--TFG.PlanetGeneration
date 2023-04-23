@@ -61,9 +61,6 @@ void Render::drawObject(Object* obj){
 	drawMesh(obj->mesh,obj->getMatrix());	
 }
 
-
-
-
 void Render::drawObjectGL4(Object* obj){
 
 	if (obj->mesh->tex->textType == 2) {
@@ -146,8 +143,8 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);
 
 	//Pintar lineas
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glDisable(GL_CULL_FACE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glDisable(GL_CULL_FACE);
 
 
 	if (obj->mesh->tex->textType == 0 || obj->mesh->tex->textType == 7) {

@@ -25,6 +25,7 @@ public:
 	Mesh();
 	Mesh(std::string fileName);
 	Mesh(int vertex);
+	Mesh(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex);
 
 
 	

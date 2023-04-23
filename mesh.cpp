@@ -36,7 +36,7 @@ Mesh::Mesh(std::string fileName) {
 	loadFromFile(fileName);
 }
 
-Mesh::Mesh(int vertex) {
+Mesh::Mesh(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex) {
 
 	vertexList = new std::vector<vertex_t>();
 	faceList = new std::vector<int>();
@@ -89,14 +89,17 @@ Mesh::Mesh(int vertex) {
 		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
 	}
 
-	std::string vshader = "Shaders/Vertex/planetVertexShader.glsl";
-	std::string fshader = "Shaders/Fragment/planetFragmentShader.glsl";
-	std::string tesControlShader = "Shaders/Tessellation/planetTessellationControlShader.glsl";
-	std::string tesEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
 
-	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
-
-	tex = new Texture();
+	if (tessellationControlShader == "" && tessellationEvaluationShader == "") 
+	{
+		shader = new GLShader(vertexShader, fragmentShader);
+		tex = new Texture();
+	}
+	else 
+	{
+		shader = new GLShader(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader);
+		tex = new Texture(7);
+	}
 }
 
 void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro de forma matematica desplazando por angulos

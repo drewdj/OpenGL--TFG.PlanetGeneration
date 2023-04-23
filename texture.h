@@ -12,6 +12,7 @@ public:
     Texture(std::string filename);
     Texture(int textType, std::string folder);
     Texture();
+    Texture(int textType);
     void bind(int textureunitIdx);
 
 };

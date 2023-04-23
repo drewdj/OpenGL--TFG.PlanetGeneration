@@ -58,6 +58,12 @@ if (gl_InvocationID == 0) // Planeta
 
     gl_TessLevelInner[0] = adjustedTessellation;
 
+    gl_TessLevelOuter[0] = tessellation;
+    gl_TessLevelOuter[1] = tessellation;
+    gl_TessLevelOuter[2] = tessellation;
+    
+    gl_TessLevelInner[0] = tessellation;
+
 }
 
 

@@ -59,9 +59,9 @@ void main()
 		float specular = specularLight * specAmount;
 		
 		//specular no funciona
-        gli_FragColor = testColor * lightColor * (diffuse+ambient+specular);
+        //gli_FragColor = testColor * lightColor * (diffuse+ambient+specular);
 		//gli_FragColor = testColor * lightColor * (diffuse+ambient);
         
-        //gli_FragColor = testColor;
+        gli_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 
 }

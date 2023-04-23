@@ -96,19 +96,10 @@ Texture::Texture(std::string filename) {
 	}
 
 	Texture::Texture() {
-		this->textType = 7;
-		unsigned int noiseTexture = -1;
-		glGenTextures(1, &noiseTexture);
-		glBindTexture(GL_TEXTURE_3D, noiseTexture);
-		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	}
 
-		this->glId = noiseTexture;
-
+	Texture::Texture(int textType) {
+		this->textType = textType;
 	}
 	
 void Texture::bind(int textureunitIdx) {

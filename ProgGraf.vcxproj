@@ -205,6 +205,8 @@
     <None Include="fshader.txt" />
     <None Include="Makefile" />
     <None Include="progGrafica" />
+    <None Include="Shaders\Fragment\atmosphereFragmentShader.glsl" />
+    <None Include="Shaders\Vertex\atmosphereVertexShader.glsl" />
     <None Include="TRG\cube.trg" />
     <None Include="TRG\cube2.trg" />
     <None Include="TRG\skybox.trg" />

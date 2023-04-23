@@ -94,10 +94,25 @@ int main(int argc, char** argv)
 	scene->setCamera(new Camera(glm::vec3(0, 0, -2), glm::vec3(0, 0, 0.25), perspective),window);
 	render->setCamera(scene->getCamera());
 
-	Object* icosahedron = new Icosahedron(0);
+	std::string planetVertexShader = "Shaders/Vertex/planetVertexShader.glsl";
+	std::string planetControlShader = "Shaders/Tessellation/planetTessellationControlShader.glsl";
+	std::string planetEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
+	std::string planetFragmentShader = "Shaders/Fragment/planetFragmentShader.glsl";
+
+	Object* icosahedron = new Icosahedron(planetVertexShader, planetControlShader, planetEvaluationShader, planetFragmentShader,0);
 	icosahedron->position.z -= 2;
 	render->setupObject(icosahedron);
 	scene->addObject(icosahedron);	
+
+	std::string atmosphereVertexShader = "Shaders/Vertex/atmosphereVertexShader.glsl";
+	std::string atmosphereControlShader = "Shaders/Tessellation/atmosphereTessellationControlShader.glsl";
+	std::string atmosphereEvaluationShader = "Shaders/Tessellation/atmosphereTessellationEvaluationShader.glsl";
+	std::string atmosphereFragmentShader = "Shaders/Fragment/atmosphereFragmentShader.glsl";	
+
+	Object* atmosphere = new Icosahedron(atmosphereVertexShader, "", "", atmosphereFragmentShader, 10);
+	atmosphere->position.z -= 2;
+	render->setupObject(atmosphere);
+	scene->addObject(atmosphere);
 
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
@@ -141,7 +156,7 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("time", &icosahedron->testTime, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
-				ImGui::SliderFloat("radius", &icosahedron->radius, 1.0f, 10.0f);
+				ImGui::SliderFloat("radius", &icosahedron->radius, 0.0f, 10.0f);
 				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
 				ImGui::Separator();
 

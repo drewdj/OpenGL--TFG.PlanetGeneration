@@ -104,6 +104,12 @@
     <None Include="TRG\triangle.trg">
       <Filter>TRG</Filter>
     </None>
+    <None Include="Shaders\Fragment\atmosphereFragmentShader.glsl">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
+    <None Include="Shaders\Vertex\atmosphereVertexShader.glsl">
+      <Filter>Shaders\Vertex</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="tesControlShader.txt" />

@@ -222,6 +222,7 @@
     <Text Include="shaders\Vertex\skyboxVertexShader.glsl" />
     <Text Include="tesControlShader.txt" />
     <Text Include="tesEvaluationShader.txt" />
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

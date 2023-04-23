@@ -132,6 +132,7 @@
     <Text Include="Shaders\Fragment\lightFragmentShader.glsl">
       <Filter>Shaders\Fragment</Filter>
     </Text>
+    <Text Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Shaders">

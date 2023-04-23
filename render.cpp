@@ -142,7 +142,8 @@ void Render::drawObjectGL4(Object* obj){
 	//planeta
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "radius"), obj->radius);
 	
-
+	//camara
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);
 
 	//Pintar lineas
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

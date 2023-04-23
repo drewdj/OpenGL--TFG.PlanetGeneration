@@ -111,7 +111,6 @@ int main(int argc, char** argv)
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
-
 	while (!glfwWindowShouldClose(window))
 	{
 

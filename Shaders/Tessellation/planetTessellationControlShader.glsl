@@ -3,7 +3,10 @@
 uniform mat4 MVP;
 uniform mat4 M;
 uniform mat4 V;
+uniform vec4 camPos;
 uniform int tessellation;
+uniform float radius;
+
 
 
 layout (vertices = 3) out;
@@ -31,29 +34,24 @@ void main(){
 	
     float minTessellation = 1.0;
     float maxTessellation = 10.0;
-    float maxDistance = 5.0;
+    float maxDistance = 0.5;
 
 	
 if (gl_InvocationID == 0) // Planeta
 {
-    vec4 center_object_space = (tescontrol_pos[0] + tescontrol_pos[1] + tescontrol_pos[2]) / 3.0;
-    vec4 center_eye_space = V * M * center_object_space;
+    
+	vec4 triangleCenter = (gl_in[0].gl_Position + gl_in[1].gl_Position + gl_in[2].gl_Position) / 3.0;
+	
+	float distanceToCamera = distance(triangleCenter, camPos) - 1;
 
-    // Utiliza la componente z en el espacio de la vista para ajustar la teselación
-    float distToCamera = abs(center_eye_space.z);
-
-    // Ajustar el nivel de teselación en función de la distancia a la cámara
-    float tessellationFactor = 1.0 - clamp(distToCamera / maxDistance, 0.0, 1.0);
-    float adjustedTessellation = mix(minTessellation, maxTessellation, tessellationFactor);
-
-    gl_TessLevelOuter[0] = adjustedTessellation;
-    gl_TessLevelOuter[1] = adjustedTessellation;
-    gl_TessLevelOuter[2] = adjustedTessellation;
-
-    gl_TessLevelInner[0] = adjustedTessellation;
-
+	
+	gl_TessLevelOuter[0] = distanceToCamera;
+	gl_TessLevelOuter[1] = distanceToCamera;
+	gl_TessLevelOuter[2] = distanceToCamera;
+	gl_TessLevelInner[0] = distanceToCamera;
 
 }
+
 
 
 

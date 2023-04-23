@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 	atmosphere->position.z -= 2;
 	render->setupObject(atmosphere);
 	scene->addObject(atmosphere);
-
+	
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
 	light->position = glm::vec3(0.0f, 0.0f, 5.0f);
@@ -157,6 +157,7 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
 				ImGui::SliderFloat("radius", &icosahedron->radius, 0.0f, 10.0f);
+				ImGui::SliderFloat("atmosphereHeight", &atmosphere->radius, 0.0f, 10.0f);
 				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
 				ImGui::Separator();
 

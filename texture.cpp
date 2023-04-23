@@ -103,7 +103,7 @@ Texture::Texture(std::string filename) {
 	}
 	
 void Texture::bind(int textureunitIdx) {
-	if (this->textType == 7)
+	if (this->textType == PLANET)
 	{
 		glActiveTexture(GL_TEXTURE0 + textureunitIdx);
 		glBindTexture(GL_TEXTURE_3D, glId);

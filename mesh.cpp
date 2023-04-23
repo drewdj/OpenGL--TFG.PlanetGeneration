@@ -89,16 +89,46 @@ Mesh::Mesh(std::string vertexShader, std::string tessellationControlShader, std:
 		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
 	}
 
+	//calcular normales de las caras
+	for (size_t i = 0; i < faceList->size(); i+=3)
+	{
+		//coger las 3 caras
+		int cara1 = faceList->at(i);
+		int cara2 = faceList->at(i + 1);
+		int cara3 = faceList->at(i + 2);
+
+		//calcular la normal de la cara
+		glm::vec3 edge1 = glm::vec3(vertexList->at(cara2).posicion) - glm::vec3(vertexList->at(cara1).posicion);
+		glm::vec3 edge2 = glm::vec3(vertexList->at(cara3).posicion) - glm::vec3(vertexList->at(cara1).posicion);
+		
+		glm::vec3 faceNormal = glm::cross(edge2, edge1);
+		faceNormal = glm::normalize(faceNormal);	
+		//añadirla a cada vertice
+		vertexList->at(cara1).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+		vertexList->at(cara2).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+		vertexList->at(cara3).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+	}
+
+	//calcular normal total
+	for (size_t i = 0; i < vertexList->size(); i++)
+	{
+		glm::vec4 newNormal = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+		for (size_t j = 0; j < vertexList->at(i).faceNormals->size(); j++)
+		{
+			newNormal += vertexList->at(i).faceNormals->at(j);
+		}
+		vertexList->at(i).normal = newNormal ;
+	}
 
 	if (tessellationControlShader == "" && tessellationEvaluationShader == "") 
 	{
 		shader = new GLShader(vertexShader, fragmentShader);
-		tex = new Texture();
+		tex = new Texture(ATMOSPHERE);
 	}
 	else 
 	{
 		shader = new GLShader(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader);
-		tex = new Texture(7);
+		tex = new Texture(PLANET);
 	}
 }
 
@@ -162,7 +192,7 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 		v1.posicion.z = v[i][2];
 		v1.posicion.w = 1;
 
-		
+		v1.faceNormals = new std::vector<glm::vec4>();		
 
 		v1.color.x = 1;
 		v1.color.y = 0;
@@ -326,6 +356,8 @@ vertex_t Mesh::createVertex(std::array<float, 3> vertex) {
 	vertice0.posicion.y = vertex[1];
 	vertice0.posicion.z = vertex[2];
 	vertice0.posicion.w = 1.0f;
+
+	vertice0.faceNormals = new std::vector<glm::vec4>();
 
 	checkSharedVertex(vertice0);
 

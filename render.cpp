@@ -63,8 +63,16 @@ void Render::drawObject(Object* obj){
 
 void Render::drawObjectGL4(Object* obj){
 
-	if (obj->mesh->tex->textType == 2) {
+	if (obj->mesh->tex->textType == SKYBOX) {
 		glDepthFunc(GL_LEQUAL);
+	}
+	
+	if (obj->mesh->tex->textType == ATMOSPHERE) {
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		
 	}
 
 	obj->computeMatrix();
@@ -100,7 +108,7 @@ void Render::drawObjectGL4(Object* obj){
 
 	glm::mat4 testView = view;
 	
-	if (obj->mesh->tex->textType == 2) {		
+	if (obj->mesh->tex->textType == SKYBOX) {		
 		//downgrade to mat3 and scale it back last row = 0 so no effects on traslation
 		testView = glm::mat4(glm::mat3(view));
 	}
@@ -147,7 +155,7 @@ void Render::drawObjectGL4(Object* obj){
 	//glDisable(GL_CULL_FACE);
 
 
-	if (obj->mesh->tex->textType == 0 || obj->mesh->tex->textType == 7) {
+	if (obj->mesh->tex->textType == PLANET || obj->mesh->tex->textType == 7) {
 		glDrawElements(GL_PATCHES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
 	}
 	else
@@ -155,10 +163,13 @@ void Render::drawObjectGL4(Object* obj){
 		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	if (obj->mesh->tex->textType == 2) {
+	if (obj->mesh->tex->textType == SKYBOX) {
 		glDepthFunc(GL_LESS);
 	}
 	
+	if (obj->mesh->tex->textType == ATMOSPHERE) {
+		glDisable(GL_BLEND);
+	}
 	
 }
 

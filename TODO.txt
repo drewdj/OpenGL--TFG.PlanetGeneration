@@ -1,1 +1,10 @@
 añadir culling para los triangulos traseros
+
+multitextura
+
+terminar atmosfera
+
+creat objetos en superficie
+
+crear asteroides
+

@@ -1,5 +1,7 @@
 #version 460 core
 
+#define PI 3.1415926535897932384626433832795
+
 uniform mat4 MVP;
 uniform mat4 M;
 
@@ -7,7 +9,7 @@ uniform float time;
 uniform float manualTime;
 uniform float textureCoord;
 uniform float gradient;
-uniform float radius;
+uniform float planetRadius;
 
 
 layout (triangles, equal_spacing, ccw) in;
@@ -21,6 +23,7 @@ out vec4 fnorm;
 out flat int fTextType;
 out vec4 fcolor;
 out flat float fnoise;
+out vec2 ftexCoord;
 
 
 //
@@ -329,7 +332,7 @@ void main() {
     }
 
     // Normalizar posiciones para formar una esfera
-    pos = normalize(pos) * radius;
+    pos = normalize(pos) * planetRadius;
 
     fpos = vec4(pos, 1.0);
     
@@ -354,6 +357,13 @@ void main() {
         
     fpos += vec4(pos * n * gradient, 0.0);
 
+    // Calculamos las UV para textura después de la última asignación a fpos.
+    vec3 normalizedPos = normalize(fpos.xyz);
+    float lon = atan(normalizedPos.z, normalizedPos.x);
+    float lat = acos(normalizedPos.y);
+    texCoord.x = (lon / (2.0 * PI) + 0.5) * 40;
+    texCoord.y = (lat / PI) * 40;
+
     float delta = 0.1;
 
     // Calcular el ruido en puntos cercanos a fpos
@@ -374,17 +384,10 @@ void main() {
     fnoise = n;
     fnorm = normalize(vec4(normal, 1.0));
     fcolor = vec4(vec3(n), 1.0);
+    ftexCoord = texCoord;
 
 
     gl_Position = MVP * fpos;
-
-
-
-
-
-
-
-
 }
 
     

@@ -7,6 +7,7 @@ Render::Render(){
 	glEnable(GL_DEPTH_TEST);
 	glPatchParameteri(GL_PATCH_VERTICES, 3);
 
+	//TODO: sin esto la atmosfera marca triangulos
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_FRONT);
 	
@@ -101,10 +102,17 @@ void Render::drawObjectGL4(Object* obj){
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
 	glm::vec4 lightPos(0.0f,0.0f,5.0f,1.0f);
-	
 
-	int textureUnit = 0;
-	obj->mesh->tex->bind(textureUnit);
+	int textureUnit = 0;	
+	if (obj->mesh->tex->textType == PLANET)
+	{
+		obj->mesh->tex->bindMultiple(textureUnit);
+
+	}
+	else {
+		
+		obj->mesh->tex->bind(textureUnit);
+	}
 
 	glm::mat4 testView = view;
 	
@@ -112,6 +120,14 @@ void Render::drawObjectGL4(Object* obj){
 		//downgrade to mat3 and scale it back last row = 0 so no effects on traslation
 		testView = glm::mat4(glm::mat3(view));
 	}
+
+	// Asume que 'shader' es un objeto que representa tu programa de shader
+	for (size_t i = 0; i < 3; ++i) {
+		std::string uniformName = "u_Textures[" + std::to_string(i) + "]";
+		GLint location = glGetUniformLocation(obj->mesh->shader->programID, uniformName.c_str());
+		glUniform1i(location, textureUnit + i); // Enlaza la unidad de textura al sampler en el shader
+	}
+
 	
 	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "MVP"), 1, GL_FALSE, &(proj * testView * obj->getMatrix())[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "M"), 1, GL_FALSE, &(obj->getMatrix())[0][0]);
@@ -145,7 +161,13 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "mountainLevel"), obj->mountainLevel);
 
 	//planeta
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "radius"), obj->radius);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "planetRadius"), obj->planetRadius);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "atmosphereRadius"), obj->atmosphereRadius);
+	glUniform3fv(glGetUniformLocation(obj->shader->programID, "rayleighScattering"), 1, &obj->rayleighScattering[0]);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "mieScattering"), obj->mieScattering);
+	glUniform2fv(glGetUniformLocation(obj->shader->programID, "hesightScale"), 1, &obj->hesightScale[0]);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "refraction"), obj->refraction);
+
 	
 	//camara
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);

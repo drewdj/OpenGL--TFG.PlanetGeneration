@@ -17,7 +17,13 @@ public:
 	float textureCoord = 0.0f;
 	float gradient = 0.0f;
 
-	float radius = 1.0f;
+	float planetRadius = 1.0f;
+	float atmosphereRadius = 1.0f;
+	glm::vec3 rayleighScattering = glm::vec3(5.5e-6, 13.0e-6, 22.4e-6);
+	float mieScattering = 21e-6;
+	glm::vec2 hesightScale = glm::vec2(8.0, 1.2);
+	float refraction = 0.76f;
+	
 
 	glm::vec4 waterColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
 	glm::vec4 landColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);

@@ -1,6 +1,8 @@
 #version 430
 #extension GL_NV_shadow_samplers_cube : enable
 
+
+
 uniform vec4 lightPos;
 uniform vec4 lightColor;
 
@@ -13,8 +15,7 @@ uniform vec4 mountainColor;
 uniform float waterLevel;
 uniform float landLevel;
 uniform float mountainLevel;
-
-
+uniform sampler2D u_Textures[3]; // Para 3 texturas: arena, hierba y roca
 
 
 
@@ -23,45 +24,35 @@ in vec4 fnorm;
 flat in int fTextType;
 in vec4 fcolor;
 flat in float fnoise;
+in vec2 ftexCoord;
 
 out vec4 gli_FragColor;
 
 void main()
-{	vec4 testColor = fcolor;
+{	
 
-        if(fnoise < waterLevel)
-		{
-			testColor = fcolor * waterColor;
-        }
-        else if(fnoise < landLevel)
-        {
-            testColor = fcolor * landColor;
-		}
-		else if(fnoise < mountainLevel)
-		{
-			testColor = fcolor * mountainColor;
-		}
-		else
-		{
-			testColor = fcolor;
-		}
 
-		float ambient = 0.20f;
-		
-        vec4 normal = normalize(fnorm);
-        vec4 lightDir = normalize(lightPos - fpos);        
-        float diffuse = max(dot(normal, lightDir), 0.0);
+vec3 sandColor = texture(u_Textures[0], ftexCoord).rgb;
+vec3 grassColor = texture(u_Textures[1], ftexCoord).rgb;
+vec3 rockColor = texture(u_Textures[2], ftexCoord).rgb;
 
-		float specularLight = 0.5;
-		vec3 viewDir = normalize(camPos - fpos.xyz);
-		vec4 reflectDir = reflect(-lightDir, normal);
-		float specAmount = pow(max(dot(viewDir, reflectDir.xyz), 0.0), 8);
-		float specular = specularLight * specAmount;
-		
-		//specular no funciona
-        gli_FragColor = testColor * lightColor * (diffuse+ambient+specular);
-		//gli_FragColor = testColor * lightColor * (diffuse+ambient);
-        
-        //gli_FragColor = testColor;
+// Establece límites de altura para cada textura
+float sandThreshold = 0.3;
+float grassThreshold = 0.6;
+
+vec3 finalColor;
+if (fnoise < sandThreshold) {
+    finalColor = sandColor;
+} else if (fnoise < grassThreshold) {
+    finalColor = mix(sandColor, grassColor, smoothstep(sandThreshold, grassThreshold, fnoise));
+} else {
+    finalColor = mix(grassColor, rockColor, smoothstep(grassThreshold, 1.0, fnoise));
+}
+
+finalColor = texture(u_Textures[0], ftexCoord).rgb;
+
+// Asigna el color final al fragmento
+gli_FragColor = vec4(finalColor, 1.0);
+
 
 }

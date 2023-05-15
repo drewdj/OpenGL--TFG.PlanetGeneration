@@ -99,7 +99,7 @@ int main(int argc, char** argv)
 	std::string planetEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
 	std::string planetFragmentShader = "Shaders/Fragment/planetFragmentShader.glsl";
 
-	Object* icosahedron = new Icosahedron(planetVertexShader, planetControlShader, planetEvaluationShader, planetFragmentShader,0);
+	Object* icosahedron = new Icosahedron(planetVertexShader, planetControlShader, planetEvaluationShader, planetFragmentShader,100);
 	icosahedron->position.z -= 2;
 	render->setupObject(icosahedron);
 	scene->addObject(icosahedron);	
@@ -108,11 +108,6 @@ int main(int argc, char** argv)
 	std::string atmosphereControlShader = "Shaders/Tessellation/atmosphereTessellationControlShader.glsl";
 	std::string atmosphereEvaluationShader = "Shaders/Tessellation/atmosphereTessellationEvaluationShader.glsl";
 	std::string atmosphereFragmentShader = "Shaders/Fragment/atmosphereFragmentShader.glsl";	
-
-	Object* atmosphere = new Icosahedron(atmosphereVertexShader, "", "", atmosphereFragmentShader, 10);
-	atmosphere->position.z -= 2;
-	render->setupObject(atmosphere);
-	scene->addObject(atmosphere);
 	
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
@@ -123,6 +118,11 @@ int main(int argc, char** argv)
 	Object* skybox = new Skybox("TRG/skybox.trg");
 	render->setupObject(skybox);
 	scene->addObject(skybox);
+
+	Object* atmosphere = new Icosahedron(atmosphereVertexShader, "", "", atmosphereFragmentShader, 10);
+	atmosphere->position.z -= 2;
+	render->setupObject(atmosphere);
+	scene->addObject(atmosphere);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 
@@ -156,11 +156,17 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("time", &icosahedron->testTime, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
-				ImGui::SliderFloat("radius", &icosahedron->radius, 0.0f, 10.0f);
-				ImGui::SliderFloat("atmosphereHeight", &atmosphere->radius, 0.0f, 10.0f);
+				ImGui::SliderFloat("radius", &icosahedron->planetRadius, 0.0f, 10.0f);
+				atmosphere->planetRadius = icosahedron->planetRadius;
+				ImGui::SliderFloat("atmosphereHeight", &atmosphere->atmosphereRadius, 0.0f, 10.0f);
 				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
 				ImGui::Separator();
 
+				ImGui::ColorEdit3("Rayleigh", (float*)&atmosphere->rayleighScattering);
+				ImGui::SliderFloat("Mie", &atmosphere->mieScattering, 0.0f, 1.0f);
+				ImGui::DragFloat2("heightScale", (float*)&atmosphere->hesightScale, 0.01f, 0.0f, 10.0f);
+				ImGui::SliderFloat("Mie refraction", &atmosphere->refraction, 0.0f, 1.0f);
+				ImGui::Separator();
 				ImGui::ColorEdit3("light color", (float*)&lightColor); // Edit 3 floats representing a color
 				icosahedron->lightColor = lightColor;
 				light->lightColor = lightColor;
@@ -176,6 +182,8 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("land level", &icosahedron->landLevel, 0.0f, 1.0f);
 				ImGui::SliderFloat("mountain level", &icosahedron->mountainLevel, 0.0f, 1.0f);
 				ImGui::Separator();
+				
+				
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 				ImGui::End();

@@ -4,7 +4,7 @@ uniform mat4 MVP;
 uniform mat4 M;
 uniform mat4 V;
 uniform int tessellation;
-uniform float radius;
+uniform float planetRadius;
 
 
 layout (vertices = 3) out;
@@ -46,7 +46,7 @@ if (gl_InvocationID == 0) // Planeta
     float distToCamera = abs(center_eye_space.z);
 
     // Considera el radio del planeta al calcular la distancia
-    float adjustedDistToCamera = distToCamera - radius;
+    float adjustedDistToCamera = distToCamera - planetRadius;
 
     // Ajustar el nivel de teselación en función de la distancia ajustada a la cámara
     float tessellationFactor = 1.0 - clamp(adjustedDistToCamera / maxDistance, 0.0, 1.0);
@@ -57,12 +57,6 @@ if (gl_InvocationID == 0) // Planeta
     gl_TessLevelOuter[2] = adjustedTessellation;
 
     gl_TessLevelInner[0] = adjustedTessellation;
-
-    gl_TessLevelOuter[0] = tessellation;
-    gl_TessLevelOuter[1] = tessellation;
-    gl_TessLevelOuter[2] = tessellation;
-    
-    gl_TessLevelInner[0] = tessellation;
 
 }
 

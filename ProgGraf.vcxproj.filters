@@ -163,4 +163,9 @@
       <UniqueIdentifier>{b0dcf9ec-b074-4607-9f52-8ede9e4e09d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="grassTexture.jpg" />
+    <Image Include="rockTexture.jpg" />
+    <Image Include="sandTexture.jpg" />
+  </ItemGroup>
 </Project>

@@ -128,7 +128,15 @@ Mesh::Mesh(std::string vertexShader, std::string tessellationControlShader, std:
 	else 
 	{
 		shader = new GLShader(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader);
-		tex = new Texture(PLANET);
+		std::vector<std::string> planetTextures = {
+			"sandTexture.png",
+			"grassTexture.png",
+			"rockTexture.png"
+		};
+
+		//tex = new Texture(planetTextures);
+		//tex = new Texture("data/terrain/grassTexture.jpg");
+		tex = new Texture(PLANET, "terrain");
 	}
 }
 
@@ -406,7 +414,7 @@ void Mesh::loadFromFile(std::string fileName) {
 		faceList->push_back(v2);
 		faceList->push_back(v3);
 	}
-
+	
 	std::string vshader;
 	fin >> vshader;
 	std::string fshader;

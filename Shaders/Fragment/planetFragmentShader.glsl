@@ -2,7 +2,7 @@
 #extension GL_NV_shadow_samplers_cube : enable
 
 
-
+#define PI 3.1415926535897932384626433832795
 uniform vec4 lightPos;
 uniform vec4 lightColor;
 
@@ -31,28 +31,20 @@ out vec4 gli_FragColor;
 void main()
 {	
 
+    float repeatFactor = 10;
+    // Convertir la posición a coordenadas polares
+    float lon = atan(fpos.z, fpos.x);
+    float lat = asin(fpos.y);
+    
+    // Normalizar a [0, 1]
+    float u = lon / (2.0 * PI) + 0.5;
+    float v = lat / PI + 0.5;
 
-vec3 sandColor = texture(u_Textures[0], ftexCoord).rgb;
-vec3 grassColor = texture(u_Textures[1], ftexCoord).rgb;
-vec3 rockColor = texture(u_Textures[2], ftexCoord).rgb;
+    // Repite la textura
+    u *= repeatFactor;
+    v *= repeatFactor;
 
-// Establece límites de altura para cada textura
-float sandThreshold = 0.3;
-float grassThreshold = 0.6;
-
-vec3 finalColor;
-if (fnoise < sandThreshold) {
-    finalColor = sandColor;
-} else if (fnoise < grassThreshold) {
-    finalColor = mix(sandColor, grassColor, smoothstep(sandThreshold, grassThreshold, fnoise));
-} else {
-    finalColor = mix(grassColor, rockColor, smoothstep(grassThreshold, 1.0, fnoise));
-}
-
-finalColor = texture(u_Textures[0], ftexCoord).rgb;
-
-// Asigna el color final al fragmento
-gli_FragColor = vec4(finalColor, 1.0);
+    gli_FragColor = texture(u_Textures[0], vec2(u, v));
 
 
 }

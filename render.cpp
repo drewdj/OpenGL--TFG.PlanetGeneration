@@ -101,7 +101,7 @@ void Render::drawObjectGL4(Object* obj){
 	glEnableVertexAttribArray(vnorm);
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
-	glm::vec4 lightPos(0.0f,0.0f,5.0f,1.0f);
+	glm::vec4 lightPos(0.0f,0.0f,35.0f,1.0f);
 
 	int textureUnit = 0;	
 	if (obj->mesh->tex->textType == PLANET)
@@ -141,6 +141,10 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "manualTime"), obj->Time);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "textureCoord"), obj->textureCoord);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "gradient"), obj->gradient);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "noiseOctaves"), obj->noiseOctaves);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseAmplitude"), obj->noiseAmplitude);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseFrequency"), obj->noiseFrequency);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseN"), obj->noiseN);
 
 	glUniform4fv(2,1,&lightPos[0]);
 

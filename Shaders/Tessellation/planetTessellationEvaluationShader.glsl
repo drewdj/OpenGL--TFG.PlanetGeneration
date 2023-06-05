@@ -10,6 +10,10 @@ uniform float manualTime;
 uniform float textureCoord;
 uniform float gradient;
 uniform float planetRadius;
+uniform int noiseOctaves;
+uniform float noiseAmplitude;
+uniform float noiseFrequency;
+uniform float noiseN;
 
 
 layout (triangles, equal_spacing, ccw) in;
@@ -95,6 +99,28 @@ float psrdnoise(vec3 x, vec3 period, float alpha, out vec3 gradient)
   return 39.5 * n;
 }
 
+float calculateNoise(float noise,int octaves, float coord, vec4 pos){
+
+    vec3 v2 = coord*vec3(pos);
+    vec3 periodic = vec3(0.0);
+    vec3 g;
+    //float alpha = time;
+    float alpha = manualTime;
+
+    float n = noise;
+    int numOctaves = octaves;  // Número de octavas
+    float amplitude = 0.5;
+    float frequency = 2;
+
+    for(int i = 0; i < numOctaves; ++i) {
+    n += amplitude * psrdnoise(frequency * v2 + vec3(0.1 * float(i)), frequency * periodic, frequency * alpha, g);
+    amplitude *= noiseAmplitude; // Amplitud de la siguiente octava
+    frequency *= noiseFrequency; // Frecuencia de la siguiente octava
+    }
+
+    return n;
+}
+
 
 
 void main() {    
@@ -116,54 +142,13 @@ void main() {
     pos = normalize(pos) * planetRadius;
 
     fpos = vec4(pos, 1.0);
-    
-    normal = normalize(pos);
 
-    vec3 v2 = textureCoord*vec3(pos);
-    vec3 periodic = vec3(0.0);
-    vec3 g;
-    //float alpha = time;
-    float alpha = manualTime;
+    float n = calculateNoise(noiseN, noiseOctaves, textureCoord, fpos);
 
-    //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
-
-    float n = 0.5;
-    n += 0.4*psrdnoise(v2, periodic, alpha, g);
-    n += 0.2*psrdnoise(2.0*v2+0.1, periodic*2.0, 2.0*alpha, g);
-    n += 0.1*psrdnoise(3.0*v2+0.2, periodic*4.0, 4.0*alpha, g);
-    n += 0.05*psrdnoise(8.0*v2+0.3, periodic*8.0, 8.0*alpha, g);
-    n += 0.025*psrdnoise(16.0*v2, periodic*16.0, 16.0*alpha, g);       
-    
-
-        
     fpos += vec4(pos * n * gradient, 0.0);
-
-    // Calculamos las UV para textura después de la última asignación a fpos.
-    vec3 normalizedPos = normalize(fpos.xyz);
-    float lon = atan(normalizedPos.z, normalizedPos.x);
-    float lat = acos(normalizedPos.y);
-    texCoord.x = (lon / (2.0 * PI) + 0.5) * 40;
-    texCoord.y = (lat / PI) * 40;
-
-    float delta = 0.1;
-
-    // Calcular el ruido en puntos cercanos a fpos
-    float nX = psrdnoise(vec3(fpos.x + delta, fpos.y, fpos.z), periodic, alpha, g);
-    float nY = psrdnoise(vec3(fpos.x, fpos.y + delta, fpos.z), periodic, alpha, g);
-    float nZ = psrdnoise(vec3(fpos.x, fpos.y, fpos.z + delta), periodic, alpha, g);
-
-    // Calcular las diferencias en cada eje
-    float dX = nX - n;
-    float dY = nY - n;
-    float dZ = nZ - n;
-
-    // Calcular la normal y normalizarla
-    vec3 normalNoise = vec3(dX, dY, dZ);
-    fnorm = normalize(vec4(normalNoise, 0.0));
     
-    
+    fnorm = vec4(normal, 1.0);
     fnoise = n;
-    fnorm = normalize(vec4(normal, 1.0));
     fcolor = vec4(vec3(n), 1.0);
     ftexCoord = texCoord;
 

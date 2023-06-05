@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
-	light->position = glm::vec3(0.0f, 0.0f, 5.0f);
+	light->position = glm::vec3(0.0f, 0.0f, 35.0f);
 	render->setupObject(light);
 	scene->addObject(light);
 
@@ -175,6 +175,12 @@ int main(int argc, char** argv)
 				ImGui::SliderFloat("Color Time", &icosahedron->colorTime, 0.0f, 2.0f);
 				ImGui::SliderFloat("Color TexCoord", &icosahedron->colorTextureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("Color Gradient", &icosahedron->colorGradient, 0.0f, 1.0f);
+				ImGui::Separator();
+
+				ImGui::SliderInt("Noise Octaves", &icosahedron->noiseOctaves, 0.0f, 30.0f);
+				ImGui::SliderFloat("Noise Frequency", &icosahedron->noiseFrequency, 0.0f, 10.0f);
+				ImGui::SliderFloat("Noise Amplitude", &icosahedron->noiseAmplitude, 0.0f, 1.0f);
+				ImGui::SliderFloat("Noise N", &icosahedron->noiseN, 0.0f, 5.0f);
 				
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

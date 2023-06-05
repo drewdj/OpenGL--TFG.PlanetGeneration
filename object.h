@@ -28,6 +28,10 @@ public:
 	float colorTextureCoord = 0.0f;
 	float colorGradient = 0.0f;
 
+	int noiseOctaves = 8.0f;
+	float noiseAmplitude = 0.5f;
+	float noiseFrequency = 2.0f;
+	float noiseN = 0.5f;
 	
 	int tessellation = 64;
 

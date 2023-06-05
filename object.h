@@ -13,7 +13,7 @@ public:
 	int typeObject;
 	bool markedDelete=false;
 	
-	float testTime = 0.0f;
+	float Time = 0.0f;
 	float textureCoord = 0.0f;
 	float gradient = 0.0f;
 
@@ -24,14 +24,10 @@ public:
 	glm::vec2 hesightScale = glm::vec2(8.0, 1.2);
 	float refraction = 0.76f;
 	
+	float colorTime = 1.0f;
+	float colorTextureCoord = 0.0f;
+	float colorGradient = 0.0f;
 
-	glm::vec4 waterColor = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-	glm::vec4 landColor = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-	glm::vec4 mountainColor = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
-
-	float waterLevel = 0.0f;
-	float landLevel = 0.0f;
-	float mountainLevel = 0.0f;
 	
 	int tessellation = 64;
 

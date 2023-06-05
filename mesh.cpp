@@ -135,7 +135,7 @@ Mesh::Mesh(std::string vertexShader, std::string tessellationControlShader, std:
 		};
 
 		//tex = new Texture(planetTextures);
-		tex = new Texture("data/terrain/grassTexture.jpg");
+		tex = new Texture("data/grass/texture2.jpg");
 		//tex = new Texture(PLANET, "terrain");
 	}
 }

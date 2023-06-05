@@ -138,7 +138,7 @@ void Render::drawObjectGL4(Object* obj){
 
 	//ruido
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "time"), (float)clock() / CLOCKS_PER_SEC);
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "manualTime"), obj->testTime);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "manualTime"), obj->Time);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "textureCoord"), obj->textureCoord);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "gradient"), obj->gradient);
 
@@ -150,15 +150,13 @@ void Render::drawObjectGL4(Object* obj){
 	//light
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
+	//Color
 
-	glUniform4fv(glGetUniformLocation(obj->shader->programID, "waterColor"),1,&obj->waterColor[0]);
-	glUniform4fv(glGetUniformLocation(obj->shader->programID, "landColor"), 1, &obj->landColor[0]);
-	glUniform4fv(glGetUniformLocation(obj->shader->programID, "mountainColor"), 1, &obj->mountainColor[0]);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTime"), obj->colorTime);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTextureCoord"), obj->colorTextureCoord);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorGradient"), obj->colorGradient);
+
 	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellation"), obj->tessellation);
-
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "waterLevel"), obj->waterLevel);
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "landLevel"), obj->landLevel);
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "mountainLevel"), obj->mountainLevel);
 
 	//planeta
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "planetRadius"), obj->planetRadius);
@@ -168,6 +166,8 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform2fv(glGetUniformLocation(obj->shader->programID, "hesightScale"), 1, &obj->hesightScale[0]);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "refraction"), obj->refraction);
 
+	//time
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "time"), (float)clock() / CLOCKS_PER_SEC);
 	
 	//camara
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);

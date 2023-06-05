@@ -153,7 +153,7 @@ int main(int argc, char** argv)
 
 				ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it
 				ImGui::Checkbox("Demo Window", &show_demo_window);
-				ImGui::SliderFloat("time", &icosahedron->testTime, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+				ImGui::SliderFloat("time", &icosahedron->Time, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
 				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
 				ImGui::SliderFloat("radius", &icosahedron->planetRadius, 0.0f, 10.0f);
@@ -172,17 +172,9 @@ int main(int argc, char** argv)
 				light->lightColor = lightColor;
 				ImGui::Separator();
 
-				//select color ImGui
-				ImGui::ColorEdit3("water color", (float*)&icosahedron->waterColor); // Edit 3 floats representing a color
-				ImGui::ColorEdit3("land color", (float*)&icosahedron->landColor); // Edit 3 floats representing a color
-				ImGui::ColorEdit3("mountain color", (float*)&icosahedron->mountainColor); // Edit 3 floats representing a color
-				ImGui::Separator();
-
-				ImGui::SliderFloat("water level", &icosahedron->waterLevel, 0.0f, 1.0f);
-				ImGui::SliderFloat("land level", &icosahedron->landLevel, 0.0f, 1.0f);
-				ImGui::SliderFloat("mountain level", &icosahedron->mountainLevel, 0.0f, 1.0f);
-				ImGui::Separator();
-				
+				ImGui::SliderFloat("Color Time", &icosahedron->colorTime, 0.0f, 2.0f);
+				ImGui::SliderFloat("Color TexCoord", &icosahedron->colorTextureCoord, 0.0f, 10.0f);
+				ImGui::SliderFloat("Color Gradient", &icosahedron->colorGradient, 0.0f, 1.0f);
 				
 
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

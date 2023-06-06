@@ -110,6 +110,9 @@
     <None Include="Shaders\Vertex\atmosphereVertexShader.glsl">
       <Filter>Shaders\Vertex</Filter>
     </None>
+    <None Include="scattering-shader.js">
+      <Filter>Shaders\Fragment</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="tesControlShader.txt" />

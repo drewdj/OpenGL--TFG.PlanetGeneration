@@ -205,6 +205,7 @@
     <None Include="fshader.txt" />
     <None Include="Makefile" />
     <None Include="progGrafica" />
+    <None Include="scattering-shader.js" />
     <None Include="Shaders\Fragment\atmosphereFragmentShader.glsl" />
     <None Include="Shaders\Vertex\atmosphereVertexShader.glsl" />
     <None Include="TRG\cube.trg" />

@@ -143,11 +143,36 @@ void main() {
 
     fpos = vec4(pos, 1.0);
 
-    float n = calculateNoise(noiseN, noiseOctaves, textureCoord, fpos);
+    vec3 v2 = textureCoord*vec3(pos);
+    vec3 periodic = vec3(0.0);
+    vec3 g;
+    //float alpha = time;
+    float alpha = manualTime;
 
+    //float n = 0.5 + 0.5*psrdnoise(v2, p, alpha, g);
+
+    float n = noiseN;
+    int numOctaves = noiseOctaves;  // Número de octavas
+    float amplitude = 0.5;
+    float frequency = 2;
+
+    for(int i = 0; i < numOctaves; ++i) {
+
+        n += amplitude * psrdnoise(frequency * v2 + vec3(0.1 * float(i)), frequency * periodic, frequency * alpha, g);
+        amplitude *= noiseAmplitude; // Amplitud de la siguiente octava
+        frequency *= noiseFrequency; // Frecuencia de la siguiente octava
+    }
+        
     fpos += vec4(pos * n * gradient, 0.0);
-    
-    fnorm = vec4(normal, 1.0);
+
+    g /= (planetRadius + n * gradient);
+
+    vec3 h = g - dot(g, pos) * pos;
+
+    vec3 testNormal = normalize(pos - n * gradient * h);
+
+
+    fnorm = vec4(testNormal, 1.0);
     fnoise = n;
     fcolor = vec4(vec3(n), 1.0);
     ftexCoord = texCoord;

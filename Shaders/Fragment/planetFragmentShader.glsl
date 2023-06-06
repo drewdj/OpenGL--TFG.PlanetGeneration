@@ -63,7 +63,7 @@ void main()
     float specAmount = pow(max(dot(viewDir, reflectDir.xyz), 0.0), 8);
     float specular = specularLight * specAmount;
     
-    gli_FragColor = color * lightColor;
+    gli_FragColor = color * lightColor * (diffuse + ambient + specular);
 
 
 }

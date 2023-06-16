@@ -22,22 +22,21 @@
 
 
 
-bool renderfps(double framerate, GLFWwindow* window)
+bool renderfps(double framerate, double& deltaTime,GLFWwindow* window)
 {
 	static double lastTime = 0;
 	static double currentTime = 0;
-	double timeDiff;
 	int counter = 0;
 	
 	
 
 	currentTime = glfwGetTime();
-	timeDiff = currentTime - lastTime;
+	deltaTime = currentTime - lastTime;
 	counter++;
-	if (timeDiff >= 1.0 / framerate)
+	if (deltaTime >= 1.0 / framerate)
 	{
-		std::string FPS = std::to_string((1.0 / timeDiff) * counter);
-		std::string ms = std::to_string((timeDiff / counter) * 1000);
+		std::string FPS = std::to_string((1.0 / deltaTime) * counter);
+		std::string ms = std::to_string((deltaTime / counter) * 1000);
 		std::string newTitle = "Planetas IV - " + FPS + "FPS / " + ms + "ms";
 		glfwSetWindowTitle(window, newTitle.c_str());
 		lastTime = currentTime;
@@ -51,7 +50,7 @@ bool renderfps(double framerate, GLFWwindow* window)
 
 int main(int argc, char** argv)
 {
-
+	double deltaTime;
 	int glfwState = glfwInit();
 	if (!glfwState)
 		std::cout << "ERROR iniciando glfw\n";
@@ -99,15 +98,27 @@ int main(int argc, char** argv)
 	std::string planetEvaluationShader = "Shaders/Tessellation/planetTessellationEvaluationShader.glsl";
 	std::string planetFragmentShader = "Shaders/Fragment/planetFragmentShader.glsl";
 
-	Object* icosahedron = new Icosahedron(planetVertexShader, planetControlShader, planetEvaluationShader, planetFragmentShader,100);
-	icosahedron->position.z -= 2;
-	render->setupObject(icosahedron);
-	scene->addObject(icosahedron);	
-
 	std::string atmosphereVertexShader = "Shaders/Vertex/atmosphereVertexShader.glsl";
 	std::string atmosphereControlShader = "Shaders/Tessellation/atmosphereTessellationControlShader.glsl";
 	std::string atmosphereEvaluationShader = "Shaders/Tessellation/atmosphereTessellationEvaluationShader.glsl";
-	std::string atmosphereFragmentShader = "Shaders/Fragment/atmosphereFragmentShader.glsl";	
+	std::string atmosphereFragmentShader = "Shaders/Fragment/atmosphereFragmentShader.glsl";
+
+	float separation = 5;
+	int minSize = 0;
+	int maxSize = 5;
+	int count = 5;
+	float atmosphereRatio = 1.15f;
+	Object* icosahedron[5];
+	Object* atmosphere[5];
+
+	for (int i = 0; i < count; i++) {
+		int size = minSize + ((maxSize - minSize) * i) / (count - 1);
+		icosahedron[i] = new Icosahedron(planetVertexShader, planetControlShader, planetEvaluationShader, planetFragmentShader, size);
+		icosahedron[i]->position.x = i * separation;
+		render->setupObject(icosahedron[i]);
+		scene->addObject(icosahedron[i]);
+	}
+
 	
 	Object* light = new Cube("TRG/cube.trg");
 	light->scale /= 5;
@@ -119,22 +130,25 @@ int main(int argc, char** argv)
 	render->setupObject(skybox);
 	scene->addObject(skybox);
 
-	Object* atmosphere = new Icosahedron(atmosphereVertexShader, "", "", atmosphereFragmentShader, 10);
-	atmosphere->position.z -= 2;
-	render->setupObject(atmosphere);
-	scene->addObject(atmosphere);
+	for (int i = 0; i < count; i++) {
+		atmosphere[i] = new Icosahedron(atmosphereVertexShader, "", "", atmosphereFragmentShader, 10);
+		atmosphere[i]->atmosphereRadius = icosahedron[i]->radius * atmosphereRatio;
+		atmosphere[i]->position.x = i * separation;
+		render->setupObject(atmosphere[i]);
+		scene->addObject(atmosphere[i]);
+	}
+
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
 
-		if (renderfps(60.0f, window)) {
+		if (renderfps(60.0f, deltaTime,window)) {
 
 
-
-			
-			scene->step(0.0);
+			scene->step(deltaTime);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			ImGui_ImplOpenGL3_NewFrame();
@@ -146,43 +160,48 @@ int main(int argc, char** argv)
 			if (show_demo_window)
 				ImGui::ShowDemoWindow(&show_demo_window);
 			
-			// 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
 			{
 				static float f = 0.0f;
 				static int counter = 0;
 
-				ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it
-				ImGui::Checkbox("Demo Window", &show_demo_window);
-				ImGui::SliderFloat("time", &icosahedron->Time, 0.0f, 10.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-				ImGui::SliderFloat("textureCoord", &icosahedron->textureCoord, 0.0f, 10.0f);
-				ImGui::SliderFloat("g", &icosahedron->gradient, 0.0f, 1.0f);
-				ImGui::SliderFloat("radius", &icosahedron->planetRadius, 0.0f, 10.0f);
-				atmosphere->planetRadius = icosahedron->planetRadius;
-				ImGui::SliderFloat("atmosphereHeight", &atmosphere->atmosphereRadius, 0.0f, 10.0f);
-				ImGui::SliderInt("Tessellation", &icosahedron->tessellation, 1, 64);
-				ImGui::Separator();
+				ImGui::Begin("Editor");
+				ImGui::Checkbox("Ayuda ImGui", &show_demo_window);
+				ImGui::Checkbox("Wireframe", &render->wireframe);
+				ImGui::Checkbox("Iluminacion", &render->iluminacion);
+				ImGui::Checkbox("Atmosfera", &render->atmosfera);
 
-				ImGui::ColorEdit3("Rayleigh", (float*)&atmosphere->rayleighScattering);
-				ImGui::SliderFloat("Mie", &atmosphere->mieScattering, 0.0f, 1.0f);
-				ImGui::DragFloat2("heightScale", (float*)&atmosphere->hesightScale, 0.01f, 0.0f, 10.0f);
-				ImGui::SliderFloat("Mie refraction", &atmosphere->refraction, 0.0f, 1.0f);
-				ImGui::Separator();
-				ImGui::ColorEdit3("light color", (float*)&lightColor); // Edit 3 floats representing a color
-				icosahedron->lightColor = lightColor;
-				light->lightColor = lightColor;
-				ImGui::Separator();
+				for (int i = 0; i < count; i++) {
+					if (ImGui::TreeNode(("Icosahedron " + std::to_string(i)).c_str())) {
+						ImGui::SeparatorText("Ruido Planeta");
+						ImGui::InputFloat(("Tiempo " + std::to_string(i)).c_str(), &icosahedron[i]->Time, 0.01f, 1.0f, "%.3f");
+						ImGui::InputFloat(("Coordenada Textura " + std::to_string(i)).c_str(), &icosahedron[i]->textureCoord, 0.01f, 1.0f, "%.3f");
+						ImGui::InputFloat(("Gradiente " + std::to_string(i)).c_str(), &icosahedron[i]->gradient, 0.005f, 1.0f, "%.3f");
+						ImGui::SliderInt(("Noise Octaves " + std::to_string(i)).c_str(), &icosahedron[i]->noiseOctaves, 0.0f, 30.0f);
 
-				ImGui::SliderFloat("Color Time", &icosahedron->colorTime, 0.0f, 2.0f);
-				ImGui::SliderFloat("Color TexCoord", &icosahedron->colorTextureCoord, 0.0f, 10.0f);
-				ImGui::SliderFloat("Color Gradient", &icosahedron->colorGradient, 0.0f, 1.0f);
-				ImGui::Separator();
+						ImGui::SeparatorText("Magnitud");
+						ImGui::InputFloat(("Radio Planeta " + std::to_string(i)).c_str(), &icosahedron[i]->radius, 0.01f, 1.0f, "%.3f");
+						ImGui::InputFloat(("Escala Atmosfera " + std::to_string(i)).c_str(), &atmosphereRatio, 0.01f, 1.0f, "%.3f");
+						atmosphere[i]->atmosphereRadius = icosahedron[i]->radius * atmosphereRatio;
+						
 
-				ImGui::SliderInt("Noise Octaves", &icosahedron->noiseOctaves, 0.0f, 30.0f);
-				ImGui::SliderFloat("Noise Frequency", &icosahedron->noiseFrequency, 0.0f, 10.0f);
-				ImGui::SliderFloat("Noise Amplitude", &icosahedron->noiseAmplitude, 0.0f, 1.0f);
-				ImGui::SliderFloat("Noise N", &icosahedron->noiseN, 0.0f, 5.0f);
-				
+						ImGui::SeparatorText("Teselacion");
+						ImGui::Checkbox(("Tessellacion Manual " + std::to_string(i)).c_str(), &icosahedron[i]->tessellationType);
+						ImGui::SliderInt(("Tessellation " + std::to_string(i)).c_str(), &icosahedron[i]->tessellation, 1, 100);
 
+						ImGui::SeparatorText("Atmosfera");
+						ImGui::ColorEdit3(("Rayleigh " + std::to_string(i)).c_str(), (float*)&atmosphere[i]->rayleighScattering);
+
+						ImGui::SeparatorText("Iluminacion");
+						ImGui::ColorEdit3(("light color " + std::to_string(i)).c_str(), (float*)&lightColor); // Edit 3 floats representing a color
+						icosahedron[i]->lightColor = lightColor;
+						light->lightColor = lightColor;
+
+
+						ImGui::TreePop();
+					}
+				}
+
+				ImGui::Text("Camera speed: %.6f", scene->getCamera()->speed);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 				ImGui::End();
 			}

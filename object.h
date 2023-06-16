@@ -17,7 +17,7 @@ public:
 	float textureCoord = 0.0f;
 	float gradient = 0.0f;
 
-	float planetRadius = 1.0f;
+	float radius = 1.0f;
 	float atmosphereRadius = 1.0f;
 	glm::vec3 rayleighScattering = glm::vec3(5.5e-6, 13.0e-6, 22.4e-6);
 	float mieScattering = 21e-6;
@@ -33,7 +33,8 @@ public:
 	float noiseFrequency = 2.0f;
 	float noiseN = 0.5f;
 	
-	int tessellation = 64;
+	bool tessellationType = true;
+	int tessellation = 1;
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 

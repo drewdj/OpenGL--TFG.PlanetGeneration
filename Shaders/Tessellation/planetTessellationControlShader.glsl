@@ -5,6 +5,7 @@ uniform mat4 M;
 uniform mat4 V;
 uniform int tessellation;
 uniform float planetRadius;
+uniform bool tessellationType;
 
 
 layout (vertices = 3) out;
@@ -52,11 +53,24 @@ if (gl_InvocationID == 0) // Planeta
     float tessellationFactor = 1.0 - clamp(adjustedDistToCamera / maxDistance, 0.0, 1.0);
     float adjustedTessellation = mix(minTessellation, maxTessellation, tessellationFactor);
 
-    gl_TessLevelOuter[0] = adjustedTessellation;
-    gl_TessLevelOuter[1] = adjustedTessellation;
-    gl_TessLevelOuter[2] = adjustedTessellation;
+    if(tessellationType){
 
-    gl_TessLevelInner[0] = adjustedTessellation;
+        gl_TessLevelOuter[0] = tessellation;
+        gl_TessLevelOuter[1] = tessellation;
+        gl_TessLevelOuter[2] = tessellation;
+
+        gl_TessLevelInner[0] = tessellation;
+
+    }else{
+
+    	gl_TessLevelOuter[0] = adjustedTessellation;
+		gl_TessLevelOuter[1] = adjustedTessellation;
+		gl_TessLevelOuter[2] = adjustedTessellation;
+
+		gl_TessLevelInner[0] = adjustedTessellation;
+    }
+
+
 
 }
 

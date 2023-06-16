@@ -5,6 +5,7 @@
 #define PI 3.1415926535897932384626433832795
 uniform vec4 lightPos;
 uniform vec4 lightColor;
+uniform bool iluminacion;
 
 uniform vec3 camPos;
 
@@ -63,7 +64,13 @@ void main()
     float specAmount = pow(max(dot(viewDir, reflectDir.xyz), 0.0), 8);
     float specular = specularLight * specAmount;
     
-    gli_FragColor = color * lightColor * (diffuse + ambient + specular);
+
+    if (iluminacion){
+		gli_FragColor = color * lightColor * (diffuse + ambient + specular);
+	} else {
+		gli_FragColor = color;
+	}
+    //gli_FragColor = vec4(vec3(fnoise),1.0);
 
 
 }

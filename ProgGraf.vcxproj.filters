@@ -113,6 +113,7 @@
     <None Include="scattering-shader.js">
       <Filter>Shaders\Fragment</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="tesControlShader.txt" />

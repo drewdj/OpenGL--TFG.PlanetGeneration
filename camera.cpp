@@ -31,7 +31,7 @@ void Camera::computeMatrix() {
 
 }
 
-void Camera::checkKeys() {
+void Camera::checkKeys(double deltaTime) {
     glm::vec3 worldOffset;
     
     if (InputManager::keys['Q'])
@@ -48,33 +48,33 @@ void Camera::checkKeys() {
 
     if (InputManager::keys['W'])
     {
-        move(worldZ);
+        move(worldZ, deltaTime);
     }
 
     if (InputManager::keys['S'])
     {
-        move(-worldZ);
+        move(-worldZ, deltaTime);
     }
 
     if (InputManager::keys['A'])
     {
-		move(worldX);
+		move(worldX, deltaTime);
     }
 
     if (InputManager::keys['D'])
     {
 
-		move(-worldX);
+		move(-worldX, deltaTime);
     }
 
     if (InputManager::keys[' '])
     {
-		move(-worldY);
+		move(-worldY, deltaTime);
     }
 
     if (InputManager::keys[GLFW_KEY_LEFT_CONTROL])
     {
-		move(worldY);
+		move(worldY, deltaTime);
     }
 
 	//if arrow up increase speed
@@ -82,6 +82,12 @@ void Camera::checkKeys() {
 	{
 		speed = speed + 0.0001f;
 	}
+
+    //if arrow up increase speed
+    if (InputManager::keys[GLFW_KEY_RIGHT])
+    {
+        speed = speed + 0.01f;
+    }
     
 	//if arrow down decrease speed
 
@@ -89,6 +95,12 @@ void Camera::checkKeys() {
 	{
 		speed = speed - 0.0001f;
 	}
+
+    if (InputManager::keys[GLFW_KEY_LEFT])
+    {
+        speed = speed - 0.01f;
+    }
+
     
 
 }
@@ -98,11 +110,12 @@ void Camera::rotate(float amount, glm::vec3 axis) {
 	this->orientation = glm::normalize(q) * this->orientation;    
 }
 
-void Camera::move(glm::vec3 direction)
+void Camera::move(glm::vec3 direction, float deltaTime)
 {
-	glm::vec3 modifiedDirection = direction * orientation;
-	position += modifiedDirection * speed;
+    glm::vec3 modifiedDirection = direction * orientation;
+    position += modifiedDirection * (speed * deltaTime);
 }
+
 
 void Camera::selectCameraType(cameraType_e type)
 {
@@ -118,7 +131,7 @@ void Camera::selectCameraType(cameraType_e type)
     };
 }
 
-void Camera::step()
+void Camera::step(double deltaTime)
 {
 
     ImGuiIO& io = ImGui::GetIO();
@@ -127,7 +140,6 @@ void Camera::step()
 	float mouseDeltaY = io.MousePos.y - prevMousePos.y;
 	ImVec2 mouseDelta = ImVec2(mouseDeltaX, mouseDeltaY);
     prevMousePos = io.MousePos;
-
 
     if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
     {
@@ -142,23 +154,9 @@ void Camera::step()
         }
     }
 
-
-
-
-
-    
-    //TODO
-    //glfwGetCursorPos(window, &xpos, &ypos);
-    //glfwGetWindowSize(window, &screenx, &screeny);
-    //glfwSetCursorPos(window, 0, 0);
-
     zoffset = 0;
 
-    
-    //this->xoffset = mouseSpeed * xpos;
-    //this->yoffset = mouseSpeed * ypos;
-
-    checkKeys();
+    checkKeys(deltaTime);
 
     rotate(xoffset, worldY);
     rotate(yoffset, worldX);

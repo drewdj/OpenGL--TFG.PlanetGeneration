@@ -17,5 +17,7 @@ void main() {
 
     fpos = displacedPos;
 	fnorm=normalize(inverse(transpose(M))*vnorm);
+
+
     gl_Position = MVP * displacedPos;
 }

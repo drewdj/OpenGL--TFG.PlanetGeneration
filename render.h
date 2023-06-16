@@ -22,6 +22,11 @@ private:
 
 public:
 	Render();
+
+	bool wireframe = false;
+	bool iluminacion = true;
+	bool atmosfera = true;
+
 	void drawMesh(Mesh* mesh,glm::mat4 model);
 	void drawObject(Object* obj);
 	void drawScene(Scene* scene);

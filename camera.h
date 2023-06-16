@@ -47,13 +47,13 @@ private:
 	float max_roll = 1;
 	
 	//camera base speed
-	float speed = 0.05f;;
+
 
 	//check awsd qe and space left ctl inputs
-	void checkKeys();
+	void checkKeys(double deltaTime);
 
 	//move "position" by "speed" in the direction of "direction * orientation"
-	void move(glm::vec3 direction);
+	void move(glm::vec3 direction, float deltaTime);
 
 	//rotate quaternion "orientation" by "angle" around "axis"
 	void rotate(float angle, glm::vec3 axis);
@@ -62,9 +62,9 @@ private:
 
 
 public:
-
+	float speed = 1;
 	Camera(glm::vec3 pos, glm::vec3 lookAt, cameraType_e type);
-	void step();
+	void step(double deltaTime);
 	void computeMatrix();
 	glm::vec3 getForwardVector();
 	glm::vec3 getPosition();

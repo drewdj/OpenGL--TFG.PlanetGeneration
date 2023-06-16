@@ -202,6 +202,7 @@
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="fshader.txt" />
     <None Include="Makefile" />
     <None Include="progGrafica" />

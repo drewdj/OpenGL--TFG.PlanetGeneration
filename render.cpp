@@ -7,9 +7,9 @@ Render::Render(){
 	glEnable(GL_DEPTH_TEST);
 	glPatchParameteri(GL_PATCH_VERTICES, 3);
 
-	//TODO: sin esto la atmosfera marca triangulos
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT);
+	//TODO: sin esto la atmosfera marca triangulos pero no se ve desde dentro
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 	
 }
 
@@ -154,16 +154,24 @@ void Render::drawObjectGL4(Object* obj){
 	//light
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "iluminacion"), iluminacion);
+
+	//atmosphere
+glUniform1f(glGetUniformLocation(obj->shader->programID, "atmosfera"), atmosfera);
+
 	//Color
 
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTime"), obj->colorTime);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTextureCoord"), obj->colorTextureCoord);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorGradient"), obj->colorGradient);
 
+	//Tessellation
 	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellation"), obj->tessellation);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellationType"), obj->tessellationType);
+
 
 	//planeta
-	glUniform1f(glGetUniformLocation(obj->shader->programID, "planetRadius"), obj->planetRadius);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "planetRadius"), obj->radius);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "atmosphereRadius"), obj->atmosphereRadius);
 	glUniform3fv(glGetUniformLocation(obj->shader->programID, "rayleighScattering"), 1, &obj->rayleighScattering[0]);
 	glUniform1f(glGetUniformLocation(obj->shader->programID, "mieScattering"), obj->mieScattering);
@@ -177,8 +185,18 @@ void Render::drawObjectGL4(Object* obj){
 	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);
 
 	//Pintar lineas
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glDisable(GL_CULL_FACE);
+	if (wireframe) {
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDisable(GL_CULL_FACE);
+
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_CULL_FACE);
+	}
+
 
 
 	if (obj->mesh->tex->textType == PLANET || obj->mesh->tex->textType == 7) {

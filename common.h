@@ -17,3 +17,9 @@
 #define BULLET_OBJ 		1
 #define SPACESHIP_OBJ 	2
 #define CUBE_OBJ 		3
+#define SKYBOX_OBJ 		4
+
+#define PLANET			0
+#define ATMOSPHERE		1
+#define SKYBOX			2
+

@@ -1,4 +1,5 @@
 #include "render.h"
+#include <time.h>
 #include <cstdlib>
 
 
@@ -6,8 +7,9 @@ Render::Render(){
 	glEnable(GL_DEPTH_TEST);
 	glPatchParameteri(GL_PATCH_VERTICES, 3);
 
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_FRONT);
+	//TODO: sin esto la atmosfera marca triangulos pero no se ve desde dentro
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 	
 }
 
@@ -60,12 +62,23 @@ void Render::drawObject(Object* obj){
 	drawMesh(obj->mesh,obj->getMatrix());	
 }
 
-
-
-
 void Render::drawObjectGL4(Object* obj){
 
+	if (obj->mesh->tex->textType == SKYBOX) {
+		glDepthFunc(GL_LEQUAL);
+	}
+	
+	if (obj->mesh->tex->textType == ATMOSPHERE) {
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		
+	}
+
 	obj->computeMatrix();
+
+	glm::vec4 lightColor = obj->lightColor;
 	
 	bufferObject_t bo=boList[obj->id];
 	
@@ -75,6 +88,7 @@ void Render::drawObjectGL4(Object* obj){
 
 
 	glUseProgram(obj->shader->programID);
+	
 	unsigned int vpos=0;
 	glEnableVertexAttribArray(vpos);
 	glVertexAttribPointer(vpos,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,posicion));
@@ -87,35 +101,120 @@ void Render::drawObjectGL4(Object* obj){
 	glEnableVertexAttribArray(vnorm);
 	glVertexAttribPointer(vnorm,4,GL_FLOAT,GL_FALSE,sizeof(vertex_t),(void*)offsetof(vertex_t,normal));
 	
-	glm::vec4 lightPos(0.0f,0.0f,3.0f,1.0f);
-	glm::vec4 camPos(cam->getPosition(), 1.0f);
+	glm::vec4 lightPos(0.0f,0.0f,35.0f,1.0f);
 
-	int textureUnit = 0;
-	obj->mesh->tex->bind(textureUnit);
+	int textureUnit = 0;	
+	if (obj->mesh->tex->textType == PLANET)
+	{
+		obj->mesh->tex->bindMultiple(textureUnit);
+
+	}
+	else {
+		
+		obj->mesh->tex->bind(textureUnit);
+	}
+
+	glm::mat4 testView = view;
+	
+	if (obj->mesh->tex->textType == SKYBOX) {		
+		//downgrade to mat3 and scale it back last row = 0 so no effects on traslation
+		testView = glm::mat4(glm::mat3(view));
+	}
+
+	// Asume que 'shader' es un objeto que representa tu programa de shader
+	for (size_t i = 0; i < 3; ++i) {
+		std::string uniformName = "u_Textures[" + std::to_string(i) + "]";
+		GLint location = glGetUniformLocation(obj->mesh->shader->programID, uniformName.c_str());
+		glUniform1i(location, textureUnit + i); // Enlaza la unidad de textura al sampler en el shader
+	}
 
 	
-	glUniformMatrix4fv(0,1,GL_FALSE,&(proj*view*obj->getMatrix())[0][0]);	
-	glUniformMatrix4fv(1,1,GL_FALSE,&(obj->getMatrix())[0][0]);	
-	glUniform4fv(2,1,&lightPos[0]);
-	glUniform1i(3, textureUnit);
-	glUniform1i(4, obj->mesh->tex->textType);
-	glUniform4fv(5, 1, &camPos[0]);
-	glUniform1f(6, obj->mesh->radius);	
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "MVP"), 1, GL_FALSE, &(proj * testView * obj->getMatrix())[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "M"), 1, GL_FALSE, &(obj->getMatrix())[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(obj->shader->programID, "V"), 1, GL_FALSE, &(view)[0][0]);
+	
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
 
+	//ruido
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "time"), (float)clock() / CLOCKS_PER_SEC);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "manualTime"), obj->Time);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "textureCoord"), obj->textureCoord);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "gradient"), obj->gradient);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "noiseOctaves"), obj->noiseOctaves);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseAmplitude"), obj->noiseAmplitude);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseFrequency"), obj->noiseFrequency);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "noiseN"), obj->noiseN);
+
+	glUniform4fv(2,1,&lightPos[0]);
+
+	//skybox
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "textureUnit"), textureUnit);
+	
+	//light
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightPos"), 1, &lightPos[0]);
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "lightColor"), 1, &lightColor[0]);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "iluminacion"), iluminacion);
+
+	//atmosphere
+glUniform1f(glGetUniformLocation(obj->shader->programID, "atmosfera"), atmosfera);
+
+	//Color
+
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTime"), obj->colorTime);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorTextureCoord"), obj->colorTextureCoord);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "colorGradient"), obj->colorGradient);
+
+	//Tessellation
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellation"), obj->tessellation);
+	glUniform1i(glGetUniformLocation(obj->shader->programID, "tessellationType"), obj->tessellationType);
+
+
+	//planeta
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "planetRadius"), obj->radius);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "atmosphereRadius"), obj->atmosphereRadius);
+	glUniform3fv(glGetUniformLocation(obj->shader->programID, "rayleighScattering"), 1, &obj->rayleighScattering[0]);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "mieScattering"), obj->mieScattering);
+	glUniform2fv(glGetUniformLocation(obj->shader->programID, "hesightScale"), 1, &obj->hesightScale[0]);
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "refraction"), obj->refraction);
+
+	//time
+	glUniform1f(glGetUniformLocation(obj->shader->programID, "time"), (float)clock() / CLOCKS_PER_SEC);
+	
+	//camara
+	glUniform4fv(glGetUniformLocation(obj->shader->programID, "camPos"), 1, &cam->getPosition()[0]);
 
 	//Pintar lineas
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glDisable(GL_CULL_FACE);
+	if (wireframe) {
 
-
-	if (obj->mesh->tex->textType == 0) {
-		glDrawElements(GL_PATCHES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glDisable(GL_CULL_FACE);
 
 	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_CULL_FACE);
+	}
 
-	if (obj->mesh->tex->textType == 2) {
+
+
+	if (obj->mesh->tex->textType == PLANET || obj->mesh->tex->textType == 7) {
+		glDrawElements(GL_PATCHES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
+	}
+	else
+	{
 		glDrawElements(GL_TRIANGLES, obj->mesh->faceList->size(), GL_UNSIGNED_INT, nullptr);
 	}
+
+	if (obj->mesh->tex->textType == SKYBOX) {
+		glDepthFunc(GL_LESS);
+	}
+	
+	if (obj->mesh->tex->textType == ATMOSPHERE) {
+		glDisable(GL_BLEND);
+	}
+	
 }
 
 
@@ -147,10 +246,9 @@ void Render::drawScene(Scene* scene)
 
 }
 
-void Render::setCamera(Camera* cam, GLFWwindow* window) {
+void Render::setCamera(Camera* cam) {
 
 	this->cam = cam;
-	cam->window = window;
 }
 
 

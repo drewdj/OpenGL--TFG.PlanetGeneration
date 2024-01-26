@@ -23,7 +23,7 @@ public:
 	void addObject(Object* obj);
 	void deleteObject(Object* obj);
 	std::map<int,Object*> * getObjList();
-	void step(double timeStep);
+	void step(double deltaTime);
 	
 	std::vector<Object*>* getCollisions(int idType, Object* obj);
 	~Scene();

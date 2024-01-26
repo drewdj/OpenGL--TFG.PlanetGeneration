@@ -8,7 +8,7 @@
 typedef struct bufferObject_t{
 	unsigned int abo; //array buffer object ID
 	unsigned int vbo; //vertex bufferObject
-	unsigned int ibo; //idx bufferObje
+	unsigned int ibo; //idx bufferObject
 
 }bufferObject_t;
 
@@ -22,11 +22,16 @@ private:
 
 public:
 	Render();
+
+	bool wireframe = false;
+	bool iluminacion = true;
+	bool atmosfera = true;
+
 	void drawMesh(Mesh* mesh,glm::mat4 model);
 	void drawObject(Object* obj);
 	void drawScene(Scene* scene);
 	void setupObject(Object* obj);
 	void drawObjectGL4(Object* obj);
-	void setCamera(Camera* cam, GLFWwindow* window);
+	void setCamera(Camera* cam);
 };
 

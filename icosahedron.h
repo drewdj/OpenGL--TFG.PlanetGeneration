@@ -6,7 +6,7 @@ class Icosahedron: public Object
 {
 public:
 
-	Icosahedron(int vertex) :Object(vertex) { typeObject = CUBE_OBJ; };
+	Icosahedron(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex) :Object(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader, vertex) { typeObject = CUBE_OBJ; };
 	virtual void step() override;
 	
 };

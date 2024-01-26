@@ -12,7 +12,7 @@ GLShader::	GLShader(std::string vshader, std::string fshader){
 	compileShaders();
 }
 
-GLShader::GLShader(std::string vshader, std::string fshader, std::string tesControlShader, std::string tesEvalShader) {
+GLShader::GLShader(std::string vshader, std::string tesControlShader, std::string tesEvalShader,std::string fshader) {
 
 	this->vshader = vshader;
 	this->fshader = fshader;

@@ -27,14 +27,39 @@ Texture::Texture(std::string filename) {
 
 }
 
+Texture::Texture(const std::vector<std::string>& filenames) {
+	// Genera un ID de textura para cada archivo en el vector
+	glIds.resize(filenames.size());
+
+	glGenTextures(filenames.size(), glIds.data());
+
+	for (size_t i = 0; i < filenames.size(); ++i) {
+		// Carga la imagen del archivo
+		unsigned char* data = stbi_load(filenames[i].c_str(), &w, &h, nullptr, 4);
+
+		// Carga los datos en la GPU
+		glBindTexture(GL_TEXTURE_2D, glIds[i]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		// Libera los datos de la imagen
+		stbi_image_free(data);
+	}
+}
 
 	Texture::Texture(int textType, std::string folder) {
+		
 		this->textType = textType;
 
-		
+		if (folder != "")
+		{
 			// All the faces of the cubemap (make sure they are in this exact order)
 
-			std::string carpeta = "data/" + folder +"/";
+			std::string carpeta = "data/" + folder + "/";
 
 			std::string facesCubemap[6] =
 			{
@@ -89,25 +114,34 @@ Texture::Texture(std::string filename) {
 			}
 
 			this->glId = cubemapTexture;
+		}
 		
 	}
 
+	Texture::Texture() {
+	}
+
+	Texture::Texture(int textType) {
+		this->textType = textType;
+	}
+	
+	void Texture::bindMultiple(int startingTextureUnitIdx) {
+		for (size_t i = 0; i < glIds.size(); ++i) {
+			glActiveTexture(GL_TEXTURE0 + startingTextureUnitIdx + i);
+			glBindTexture(GL_TEXTURE_2D, glIds[i]);
+		}
+	}
+
+	
 void Texture::bind(int textureunitIdx) {
-    glActiveTexture(GL_TEXTURE0+textureunitIdx);
-    glBindTexture(GL_TEXTURE_CUBE_MAP,glId);
+	if (this->textType == PLANET)
+	{
+		glActiveTexture(GL_TEXTURE0 + textureunitIdx);
+		glBindTexture(GL_TEXTURE_3D, glId);
+	}
+	else {
+		glActiveTexture(GL_TEXTURE0 + textureunitIdx);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, glId);
+	}
+
 }
-
-//void Texture::setPixel(int x, int y, char r, char g, char b, char a){
-//    data[y*w*4+x*4] = r;
-//}
-
-//void Texture::updateTexture(){
-//    //data a public
-//    glBindTexture(GL_TEXTURE_2D, glId);
-//    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,w,h,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
-//
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-//    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-//}

@@ -18,10 +18,10 @@ Object::Object()
 
 }
 
-Object::Object(int vertex) {
+Object::Object(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex) {
 	this->id = idCounter;
 	idCounter++;
-	this->mesh = new Mesh(vertex);
+	this->mesh = new Mesh(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader, vertex);
 	this->shader = mesh->shader;
 	this->modelMatrix = glm::mat4(1.0f);
 	this->collider = new Collider(this);
@@ -65,12 +65,5 @@ void Object::updateCollider(){
 }
 
 void Object::step(){
-
-	/*this->rotation.y+=0.01f;
-	this->position.x+=0.01f;
-	
-	if(this->position.x>1.0f)
-		this->position.x=-1.0f;		
-		*/
 
 }

@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Camera">
+    <Position X="38" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CgCHMAAkAAEAhACIAAAQIgACAAAhAQCOIBgAIAAAAEg=</HashCode>
+      <FileName>camera.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Skybox">
+    <Position X="26.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>skybox.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Icosahedron">
+    <Position X="26.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>icosahedron.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Mesh">
+    <Position X="24" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAASAEQgAKAAoAAQAAIAAAAQAAAARAQAEAIAAA=</HashCode>
+      <FileName>mesh.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="shader" />
+      <Field Name="tex" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Object">
+    <Position X="28.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>FgCQICjAQAAAAAQoQACAIAATAAChAgAgAAAAEEUAAwE=</HashCode>
+      <FileName>object.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mesh" />
+      <Field Name="shader" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Render">
+    <Position X="33.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABCAAAAAAAAIAAAAgAQIAAAAAAAACARAAAAQABAA=</HashCode>
+      <FileName>render.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cam" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Scene">
+    <Position X="33.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAFAAAAAAAAQIggAAEEAAQQAAgAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>scene.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="cam" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GLShader">
+    <Position X="26.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAAAABAEAAwAAAAAAAgIAAEAAIAEAAAAAAA=</HashCode>
+      <FileName>shader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System">
+    <Position X="35.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>system.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="scene" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Texture">
+    <Position X="22" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAIAAAAAAAAAAAAAAAAAAQQAoAAQAEAAA=</HashCode>
+      <FileName>texture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

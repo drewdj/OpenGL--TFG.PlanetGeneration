@@ -9,7 +9,6 @@ in vec4 fcolor;
 in vec4 fpos;
 in vec4 fnorm;
 flat in int fTextType;
-in vec4 fcubeTexCoord;
 
 out vec4 gli_FragColor;
 

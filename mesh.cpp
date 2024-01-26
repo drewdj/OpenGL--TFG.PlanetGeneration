@@ -36,9 +36,113 @@ Mesh::Mesh(std::string fileName) {
 	loadFromFile(fileName);
 }
 
+Mesh::Mesh(std::string vertexShader, std::string tessellationControlShader, std::string tessellationEvaluationShader, std::string fragmentShader, int vertex) {
+
+	vertexList = new std::vector<vertex_t>();
+	faceList = new std::vector<int>();
+
+	computeIcosahedronVertices();
+
+
+	int tindices[20][3];
+	for (int i = 1; i <= 5; i++)
+	{
+		tindices[i - 1][2] = 0;
+		tindices[i - 1][1] = i;
+		tindices[i - 1][0] = 1 + (i % 5);
+
+		tindices[i + 4][2] = 1 + (i % 5);
+		tindices[i + 4][1] = i;
+		tindices[i + 4][0] = i + 5;
+
+		tindices[i + 9][2] = i + 5;
+		tindices[i + 9][1] = 6 + (i % 5);
+		tindices[i + 9][0] = 1 + (i % 5);
+
+		tindices[i + 14][2] = i + 5;
+		tindices[i + 14][1] = 11;
+		tindices[i + 14][0] = 6 + (i % 5);
+	}
+
+	for (int i = 0; i < 20; i++)
+	{
+		int v1, v2, v3;
+
+		v1 = tindices[i][0];
+		v2 = tindices[i][1];
+		v3 = tindices[i][2];
+
+		std::array<float, 3> vertex0, vertex1, vertex2;
+
+		vertex0[0] = v[v1][0];
+		vertex0[1] = v[v1][1];
+		vertex0[2] = v[v1][2];
+
+		vertex1[0] = v[v2][0];
+		vertex1[1] = v[v2][1];
+		vertex1[2] = v[v2][2];
+
+		vertex2[0] = v[v3][0];
+		vertex2[1] = v[v3][1];
+		vertex2[2] = v[v3][2];
+
+		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
+	}
+
+	//calcular normales de las caras
+	for (size_t i = 0; i < faceList->size(); i+=3)
+	{
+		//coger las 3 caras
+		int cara1 = faceList->at(i);
+		int cara2 = faceList->at(i + 1);
+		int cara3 = faceList->at(i + 2);
+
+		//calcular la normal de la cara
+		glm::vec3 edge1 = glm::vec3(vertexList->at(cara2).posicion) - glm::vec3(vertexList->at(cara1).posicion);
+		glm::vec3 edge2 = glm::vec3(vertexList->at(cara3).posicion) - glm::vec3(vertexList->at(cara1).posicion);
+		
+		glm::vec3 faceNormal = glm::cross(edge2, edge1);
+		faceNormal = glm::normalize(faceNormal);	
+		//añadirla a cada vertice
+		vertexList->at(cara1).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+		vertexList->at(cara2).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+		vertexList->at(cara3).faceNormals->push_back(glm::vec4(faceNormal, 1.0f));
+	}
+
+	//calcular normal total
+	for (size_t i = 0; i < vertexList->size(); i++)
+	{
+		glm::vec4 newNormal = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+		for (size_t j = 0; j < vertexList->at(i).faceNormals->size(); j++)
+		{
+			newNormal += vertexList->at(i).faceNormals->at(j);
+		}
+		vertexList->at(i).normal = newNormal ;
+	}
+
+	if (tessellationControlShader == "" && tessellationEvaluationShader == "") 
+	{
+		shader = new GLShader(vertexShader, fragmentShader);
+		tex = new Texture(ATMOSPHERE);
+	}
+	else 
+	{
+		shader = new GLShader(vertexShader, tessellationControlShader, tessellationEvaluationShader, fragmentShader);
+		std::vector<std::string> planetTextures = {
+			"sandTexture.png",
+			"grassTexture.png",
+			"rockTexture.png"
+		};
+
+		//tex = new Texture(planetTextures);
+		tex = new Texture("data/grass/texture2.jpg");
+		//tex = new Texture(PLANET, "terrain");
+	}
+}
+
 void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro de forma matematica desplazando por angulos
 {
-	radius = 5;
+	radius = 1;
 	const float H_ANGLE = PI / 180 * 72;    // 72 degree = 360 / 5
 	const float V_ANGLE = atanf(1.0f / 2);  // elevation = 26.565 degree
 
@@ -84,6 +188,7 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 	v[11][1] = 0;
 	v[11][2] = -radius;
 	v[11][3] = 0;
+	
 
 	//meter los vertices en vertexList
 	for (int i = 0; i < 12; i++)
@@ -95,7 +200,7 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 		v1.posicion.z = v[i][2];
 		v1.posicion.w = 1;
 
-		
+		v1.faceNormals = new std::vector<glm::vec4>();		
 
 		v1.color.x = 1;
 		v1.color.y = 0;
@@ -118,71 +223,6 @@ void Mesh::computeIcosahedronVertices() //Calculo de los vertices del icosaedro 
 
 }
 
-Mesh::Mesh(int vertex) {
-
-	vertexList = new std::vector<vertex_t>();
-	faceList = new std::vector<int>();
-
-	computeIcosahedronVertices();
-
-
-	int tindices[20][3];
-	for (int i = 1; i <= 5; i++)
-	{
-		tindices[i - 1][2] = 0;
-		tindices[i - 1][1] = i;
-		tindices[i - 1][0] = 1 + (i % 5);
-
-		tindices[i + 4][2] = 1 + (i % 5);
-		tindices[i + 4][1] = i;		
-		tindices[i + 4][0] = i + 5;
-
-		tindices[i + 9][2] = i + 5;
-		tindices[i + 9][1] = 6 + (i % 5);
-		tindices[i + 9][0] = 1 + (i % 5);
-
-		tindices[i + 14][2] = i + 5;
-		tindices[i + 14][1] = 11;	
-		tindices[i + 14][0] = 6 + (i % 5);
-	}
-
-	for (int i = 0; i < 20; i++)
-	{
-		int v1, v2, v3;
-
-		v1 = tindices[i][0];
-		v2 = tindices[i][1];
-		v3 = tindices[i][2];
-
-		std::array<float, 3> vertex0,vertex1,vertex2;
-		
-		vertex0[0] = v[v1][0];
-		vertex0[1] = v[v1][1];
-		vertex0[2] = v[v1][2];
-
-		vertex1[0] = v[v2][0];
-		vertex1[1] = v[v2][1];
-		vertex1[2] = v[v2][2];
-
-		vertex2[0] = v[v3][0];
-		vertex2[1] = v[v3][1];
-		vertex2[2] = v[v3][2];
-
-		subdividirPorCorte(vertex0, vertex1, vertex2, v1, v2, v3, vertex);
-	}
-
-	std::string vshader = "vshader.txt";
-	std::string fshader = "fshader.txt";
-	std::string tesControlShader = "tesControlShader.txt";
-	std::string tesEvaluationShader = "tesEvaluationShader.txt";
-
-	shader = new GLShader(vshader, fshader, tesControlShader, tesEvaluationShader);
-	
-	tex = new Texture(0, "terrain2");
-
-	std::cout << "Caras: " << faceList->size() / 3 << std::endl;
-	std::cout << "Vertices: " << vertexList->size() << std::endl;
-}
 
 void Mesh::normalize(std::array<float, 3> &v) {
 	float d = sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
@@ -249,7 +289,6 @@ void Mesh::subdividirPorCorte(std::array<float, 3> vertex0, std::array<float, 3>
 
 			vertex_t vertice2 = createVertex(rowList[i][j + 1]);
 
-
 			faceList->push_back(vertice0.positionInList);
 			faceList->push_back(vertice1.positionInList);
 			faceList->push_back(vertice2.positionInList);
@@ -268,6 +307,7 @@ void Mesh::subdividirPorCorte(std::array<float, 3> vertex0, std::array<float, 3>
 			vertex_t inverseVertice1 = createVertex(rowList[i + 1][j + 1]);
 
 			vertex_t inverseVertice2 = createVertex(rowList[i][j + 1]);
+
 
 			faceList->push_back(inverseVertice0.positionInList);
 			faceList->push_back(inverseVertice1.positionInList);
@@ -325,6 +365,8 @@ vertex_t Mesh::createVertex(std::array<float, 3> vertex) {
 	vertice0.posicion.z = vertex[2];
 	vertice0.posicion.w = 1.0f;
 
+	vertice0.faceNormals = new std::vector<glm::vec4>();
+
 	checkSharedVertex(vertice0);
 
 	return vertice0;
@@ -372,17 +414,21 @@ void Mesh::loadFromFile(std::string fileName) {
 		faceList->push_back(v2);
 		faceList->push_back(v3);
 	}
-
+	
 	std::string vshader;
 	fin >> vshader;
 	std::string fshader;
 	fin >> fshader;
+	int texType;
+	fin >> texType;
 	std::string texFolder;
 	fin >> texFolder;
 	fin.close();
+	
+	std::cout << texType << std::endl;
 
 	shader = new GLShader(vshader, fshader);
-	tex = new Texture(2,texFolder);
+	tex = new Texture(texType,texFolder);
 }
 
 

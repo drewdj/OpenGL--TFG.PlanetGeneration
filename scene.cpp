@@ -11,7 +11,7 @@ Scene::Scene(){
 void Scene::setCamera(Camera* cam, GLFWwindow* window){
 
 	this->cam=cam;
-	cam->window = window;
+	cam->setWindow(window);
 }
 
 Camera* Scene::getCamera(){
@@ -40,7 +40,7 @@ void Scene::addObject(Object* obj){
 }
 
 
-void Scene::step(double timeStep)
+void Scene::step(double deltaTime)
 {
 
 	for(auto it=addedObjList->begin();
@@ -61,7 +61,7 @@ void Scene::step(double timeStep)
 	}
 	
 	sceneGrid->update();
-	cam->step();
+	cam->step(deltaTime);
 	for(auto it=objList->begin();
 		it!=objList->end();
 		it++)
